@@ -27,37 +27,41 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-					response = JSON.parse(Net::HTTP.get(URI.parse("https://www.googleapis.com/books/v1/volumes?q=" + URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u))))
-					text = ""
-					for index in 0..9 do
-						text += response['items'][index]['volumeInfo']['title'] + "\n"
-					end
-						message = {
-							type: 'text',
-							text: text
-						}
+          endpoint = "https://www.googleapis.com"
+          user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
+          response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query)))
+          text = ""
+          for index in 0..9 do
+            text += response['items'][index]['volumeInfo']['title'] + "\n"
+          end
+          message = {
+            type: 'text',
+            text: text
+          }
           client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
-					latitude = event.message['latitude']
-					longitude = event.message['longitude']
+        calil_appkey = ENV["CALIL_APPKEY"]
+        latitude = event.message['latitude']
+        longitude = event.message['longitude']
+        endpoint = "http://api.calil.jp"
 
-					# process
-					response = JSON.parse(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=b8c0e0e67846679920a4eae16a42cc07&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+        response = JSON.parse(Net::HTTP.get(URI.parse("/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
 
-					text = ""
-					for value in response do
-						text += "#{value["short"]}\n"
-					end
-					message = {
-						type: 'text',
-						text: text
-					}
-					client.reply_message(event['replyToken'], message)
-      	end
+        text = ""
+        for value in response do
+          text += "#{value["short"]}\n"
+        end
+
+        message = {
+          type: 'text',
+          text: text
+        }
+        client.reply_message(event['replyToken'], message)
+        end
     	end
     }
     head :ok
