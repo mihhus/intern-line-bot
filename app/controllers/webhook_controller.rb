@@ -27,10 +27,10 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-					response = JSON.parse(Net::HTTP.get(URI.parse("https://www.googleapis.com/books/v1/volumes?q=" + URI.escape("人間失格", /[^-_.!~*'()a-zA-Z\d]/u))))
-					text = "総数: #{response[totalItems]冊\nうち10冊表示}"
-					for index in 0..10 do
-						text += "#{response['items'][i]['volumeInfo']['title']}\n"
+					response = JSON.parse(Net::HTTP.get(URI.parse("https://www.googleapis.com/books/v1/volumes?q=" + URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u))))
+					text = ""
+					for index in 0..9 do
+						text += {response['items'][index]['volumeInfo']['title'] + "\n"
 					end
           message = {
             type: 'text',
