@@ -41,7 +41,7 @@ class WebhookController < ApplicationController
 					latitude = event.message['latitude']
 					longitude = event.message['longitude']
 
-					response = JSON(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+					response = JSON(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=b8c0e0e67846679920a4eae16a42cc07&{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
 
 					text = ""
 					for value in response do
