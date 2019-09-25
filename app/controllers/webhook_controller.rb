@@ -37,7 +37,7 @@ class WebhookController < ApplicationController
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
-					calil_appkey = ENV[CALIL_APPKEY]
+					calil_appkey = ENV["CALIL_APPKEY"]
 					latitude = event.message['latitude']
 					longitude = event.message['longitude']
 
