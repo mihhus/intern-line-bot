@@ -1,4 +1,7 @@
 require 'line/bot'
+require 'net/http'
+require 'uri'
+require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
@@ -33,8 +36,25 @@ class WebhookController < ApplicationController
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
           tf.write(response.body)
-        end
-      end
+        when Line::Bot::Event::MessageType::Location
+					calil_appkey = ENV["CALIL_APPKEY"]
+					latitude = event.message['latitude']
+					longitude = event.message['longitude']
+
+					response = JSON.parse(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+
+					text = ""
+					for value in response do
+						text += "#{value["short"]}\n"
+					end
+
+					message = {
+						type: 'text',
+						text: text
+					}
+					client.reply_message(event['replyToken'], message)
+      	end
+    	end
     }
     head :ok
   end
