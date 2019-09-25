@@ -45,7 +45,7 @@ class WebhookController < ApplicationController
 
 					text = ""
 					for value in response do
-						text = "#{value["short"]}\n"
+						text += "#{value["short"]}\n"
 					end
 
 
