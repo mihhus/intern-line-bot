@@ -27,9 +27,16 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          endpoint = "https://www.googleapis.com"
+          user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
+          response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query)))
+          text = ""
+          for index in 0..9 do
+            text += response['items'][index]['volumeInfo']['title'] + "\n"
+          end
           message = {
             type: 'text',
-            text: event.message['text']
+            text: text
           }
           client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
@@ -37,23 +44,24 @@ class WebhookController < ApplicationController
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
-					calil_appkey = ENV["CALIL_APPKEY"]
-					latitude = event.message['latitude']
-					longitude = event.message['longitude']
+        calil_appkey = ENV["CALIL_APPKEY"]
+        latitude = event.message['latitude']
+        longitude = event.message['longitude']
+        endpoint = "http://api.calil.jp"
 
-					response = JSON.parse(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+        response = JSON.parse(Net::HTTP.get(URI.parse("/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
 
-					text = ""
-					for value in response do
-						text += "#{value["short"]}\n"
-					end
+        text = ""
+        for value in response do
+          text += "#{value["short"]}\n"
+        end
 
-					message = {
-						type: 'text',
-						text: text
-					}
-					client.reply_message(event['replyToken'], message)
-      	end
+        message = {
+          type: 'text',
+          text: text
+        }
+        client.reply_message(event['replyToken'], message)
+        end
     	end
     }
     head :ok
