@@ -43,7 +43,7 @@ class WebhookController < ApplicationController
 					response = Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=b8c0e0e67846679920a4eae16a42cc07&geocode=#{latitude},#{longitude}&limit=10"))
 					message = {
 						type: 'text',
-						text: response
+						text: "#{latitude}, #{longitude}"
 					}
 					client.reply_message(event['replyToken'], message)
       	end
