@@ -30,12 +30,12 @@ class WebhookController < ApplicationController
 					response = JSON.parse(Net::HTTP.get(URI.parse("https://www.googleapis.com/books/v1/volumes?q=" + URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u))))
 					text = ""
 					for index in 0..9 do
-						text += {response['items'][index]['volumeInfo']['title'] + "\n"
+						text += response['items'][index]['volumeInfo']['title'] + "\n"
 					end
-          message = {
-            type: 'text',
-            text: text
-          }
+						message = {
+							type: 'text',
+							text: text
+						}
           client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
