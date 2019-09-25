@@ -37,17 +37,16 @@ class WebhookController < ApplicationController
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
+					calil_appkey = ENV[CALIL_APPKEY]
 					latitude = event.message['latitude']
 					longitude = event.message['longitude']
 
-					# process
-					response = JSON(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=#{ENV[CALIL_APPKEY]}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+					response = JSON(Net::HTTP.get(URI.parse("http://api.calil.jp/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
 
 					text = ""
 					for value in response do
 						text += "#{value["short"]}\n"
 					end
-
 
 					message = {
 						type: 'text',
