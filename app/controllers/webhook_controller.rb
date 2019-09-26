@@ -58,7 +58,7 @@ class WebhookController < ApplicationController
         longitude = event.message['longitude']
         uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           begin
-            response = Net::HTTP::start(url.host, usrl.port, user_ssl: uri.scheme == 'https') do |http|
+            response = Net::HTTP::start(url.host, usrl.port) do |http|
               http.get(uri.request_uri)
             end
           rescue => e
