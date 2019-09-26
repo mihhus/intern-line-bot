@@ -49,21 +49,16 @@ class WebhookController < ApplicationController
             end
             response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query_escape + "&startIndex=" + startIndex)))
             startIndex += 1
-            if response_json['items'] then
-              10.times do |index|
-                # ISBNが存在しなければスキップ
-                type = response.dig('items', index, 'volumeInfo', 'industryIdentifiers', 'type')
-                if type then
-                  books_data[index][0] << response.dig('items', index, 'volumeInfo', 'industryIdentifiers', type)
-                  books_data[index][1] = response['items'][index]['volumeInfo']['title']
-                  books_data[index][2] = response['items'][index]['volumeInfo']['author']
-                  data_acquisition += 1
-                  break if data_acquisition == 10
-                end
+            response['items'].each_with_index do |item, index|
+              # ISBNが存在しなければスキップ
+              type = imte.dig('volumeInfo', 'industryIdentifiers', 'type')
+              if type then
+                books_data[index][0] << item.dig('volumeInfo', 'industryIdentifiers', type)
+                books_data[index][1] = item['volumeInfo']['title']
+                books_data[index][2] = item['volumeInfo']['author']
+                data_acquisition += 1
+                break if data_acquisition == 10
               end
-            else
-              # itemsが存在しない場合break、書籍検索結果自体がないor ISBNを持つ書籍が10件に満たない場合となる
-              break
             end
           end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
