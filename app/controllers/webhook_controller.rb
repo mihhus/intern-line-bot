@@ -90,15 +90,22 @@ class WebhookController < ApplicationController
                 # polling中に適宜情報をクライアントに提示する機能は実装しない
                 response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")))[/\[.*\]/]
               end
+              text = ""
+              books_data.length do |book_index|
+                text << "title: #{books_data[book_index][1]}\n"
+                library_data.length do |library_index|
+                  text << "  #{library_data[library_index][1]}: #{response['books'][books_data[book_index][0]]['libkey'].to_a}\n"
+                end
+              end
             else
               @@user_data[userId][:user_query] = user_query
-              text += "位置情報を入力してね\n"
-              message = {
-                type: 'text',
-                text: text
-              }
-              client.reply_message(event['replyToken'], message)
+              text << "位置情報を入力してね\n"
             end
+            message = {
+              type: 'text',
+              text: text
+            }
+            client.reply_message(event['replyToken'], message)
           end
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
