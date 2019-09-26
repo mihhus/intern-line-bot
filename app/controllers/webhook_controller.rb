@@ -29,21 +29,21 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
+          user_query = URI.escape("人間失格", /[^-_.!~*'()a-zA-Z\d]/u)
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
-          text = ""
           begin
-              response = Net::HTTP.start(uri.host, uri.port, user_ssl: uri.scheme == 'https') do |http|
-              http.get(uri.request_uri)
+            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+            http.get(uri.request_uri)
             end
+            # response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           rescue => e
-            text = "書籍情報の取得に失敗しましたGoogleが悪いよー"
+            p e
           end
           response_json = JSON.parse(response.body)
+          text = ""
           for index in 0..9 do
             text << response_json['items'][index]['volumeInfo']['title'] + "\n"
           end
-          text = "test"
           message = {
             type: 'text',
             text: text
