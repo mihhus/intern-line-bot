@@ -41,12 +41,12 @@ class WebhookController < ApplicationController
             begin
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
                 http.get(uri.request_uri)
-                @response_json = JSON.parse(response.body)
               end
             rescue => e
-              text << e
+              text << "Googlegaが悪いよー"
             end
 =begin
+                response_json = JSON.parse(response.body)
             response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
               if type = item.dig('volumeInfo', 'industryIdentifiers') then
