@@ -145,6 +145,7 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
+          text = "testing"
           message = {
             type: 'text',
             text: text
