@@ -15,6 +15,8 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
+    GOOGLEAPI_ENDPOINT "https://www.googleapis.com"
+    CALILAPI_ENDPOINT "http://api.calil.jp"
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
@@ -27,12 +29,11 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          endpoint = "https://www.googleapis.com"
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
-          response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query)))
+          response = JSON.parse(Net::HTTP.get(URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)))
           text = ""
           for index in 0..9 do
-            text += response['items'][index]['volumeInfo']['title'] + "\n"
+            text << response['items'][index]['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -47,13 +48,12 @@ class WebhookController < ApplicationController
         calil_appkey = ENV["CALIL_APPKEY"]
         latitude = event.message['latitude']
         longitude = event.message['longitude']
-        endpoint = "http://api.calil.jp"
 
-        response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+        response = JSON.parse(Net::HTTP.get(URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
 
         text = ""
         for value in response do
-          text += "#{value["short"]}\n"
+          text << "#{value["short"]}\n"
         end
 
         message = {
@@ -62,7 +62,7 @@ class WebhookController < ApplicationController
         }
         client.reply_message(event['replyToken'], message)
         end
-    	end
+      end
     }
     head :ok
   end
