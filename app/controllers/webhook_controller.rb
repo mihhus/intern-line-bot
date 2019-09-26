@@ -5,8 +5,6 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
-  CALILAPI_ENDPOINT = "http://api.calil.jp"
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -31,17 +29,17 @@ class WebhookController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
+          text = ""
           begin
             response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-            http.get(uri.request_uri)
+              http.get(uri.request_uri)
+              response_json = JSON.parse(response.body)
+              response_json['items'].each do |item|
+                text << item['volumeInfo']['title'] + "\n"
+              end
             end
           rescue => e
             p e
-          end
-          response_json = JSON.parse(response.body)
-          text = ""
-          for index in 0..9 do
-            text << response_json['items'][index]['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -57,17 +55,17 @@ class WebhookController < ApplicationController
           latitude = event.message['latitude']
           longitude = event.message['longitude']
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
+          text = ""
           begin
             response = Net::HTTP.start(uri.host, uri.port) do |http|
-            http.get(uri.request_uri)
+              http.get(uri.request_uri)
+              response_json = JSON.parse(response.body)
+              for value in response_json do
+                text << "#{value["short"]}\n"
+              end
             end
           rescue => e
             p e
-          end
-          text = ""
-          response_json = JSON.parse(response.body)
-          for value in response_json do
-            text << "#{value["short"]}\n"
           end
 
           message = {
@@ -80,4 +78,7 @@ class WebhookController < ApplicationController
     }
     head :ok
   end
+private
+  CALILAPI_ENDPOINT = "http://api.calil.jp"
+  GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
