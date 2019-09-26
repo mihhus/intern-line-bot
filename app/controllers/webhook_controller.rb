@@ -30,10 +30,17 @@ class WebhookController < ApplicationController
         case event.type
         when Line::Bot::Event::MessageType::Text
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
-          response = JSON.parse(Net::HTTP.get(URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)))
+          uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
+          begin
+            response = Net::HTTP::start(url.host, usrl.port, user_ssl: uri.scheme == 'https') do |http|
+              http.get(uri.request_uri)
+            end
+          rescue => e
+            text = "書籍情報の取得に失敗しましたGoogleが悪いよー"
+          end
           text = ""
           for index in 0..9 do
-            text << response['items'][index]['volumeInfo']['title'] + "\n"
+            text << JSON.parse(response.body)['items'][index]['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -48,11 +55,16 @@ class WebhookController < ApplicationController
         calil_appkey = ENV["CALIL_APPKEY"]
         latitude = event.message['latitude']
         longitude = event.message['longitude']
-
-        response = JSON.parse(Net::HTTP.get(URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
-
+        uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
+          begin
+            response = Net::HTTP::start(url.host, usrl.port, user_ssl: uri.scheme == 'https') do |http|
+              http.get(uri.request_uri)
+            end
+          rescue => e
+            text = "書籍情報の取得に失敗しましたカーリルが悪いよー"
+          end
         text = ""
-        for value in response do
+        for value in JSON.parse(response.body) do
           text << "#{value["short"]}\n"
         end
 
