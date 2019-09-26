@@ -116,7 +116,7 @@ class WebhookController < ApplicationController
             end
           end
 =end
-          text - "test"
+          text = "test"
           message = {
             type: 'text',
             text: text
