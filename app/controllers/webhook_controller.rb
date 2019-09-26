@@ -27,12 +27,20 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          endpoint = "https://www.googleapis.com"
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
-          response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query)))
+          uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           text = ""
-          for index in 0..9 do
-            text += response['items'][index]['volumeInfo']['title'] + "\n"
+          response_json = ""
+          begin
+            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+              http.get(uri.request_uri)
+            end
+            response_json = JSON.parse(response.body)
+          rescue => e
+            p e
+          end
+          response_json['items'].each do |item|
+            text << item['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -44,26 +52,34 @@ class WebhookController < ApplicationController
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
-        calil_appkey = ENV["CALIL_APPKEY"]
-        latitude = event.message['latitude']
-        longitude = event.message['longitude']
-        endpoint = "http://api.calil.jp"
-
-        response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
-
-        text = ""
-        for value in response do
-          text += "#{value["short"]}\n"
+          calil_appkey = ENV["CALIL_APPKEY"]
+          latitude = event.message['latitude']
+          longitude = event.message['longitude']
+          uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
+          text = ""
+          response_json = ""
+          begin
+            response = Net::HTTP.start(uri.host, uri.port) do |http|
+              http.get(uri.request_uri)
+            end
+            response_json = JSON.parse(response.body)
+          rescue => e
+            p e
+          end
+          for value in response_json do
+            text << "#{value["short"]}\n"
+          end
+          message = {
+            type: 'text',
+            text: text
+          }
+          client.reply_message(event['replyToken'], message)
         end
-
-        message = {
-          type: 'text',
-          text: text
-        }
-        client.reply_message(event['replyToken'], message)
-        end
-    	end
+      end
     }
     head :ok
   end
+private
+CALILAPI_ENDPOINT = "http://api.calil.jp"
+GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
