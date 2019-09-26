@@ -51,14 +51,10 @@ class WebhookController < ApplicationController
             startIndex += 1
             if response_json['items'] then
               10.times do |index|
-                if isbn = response.dig('items', index, 'volumeInfo', 'isbn_10') then
-                  books_data[index][0] << isbn
-                  books_data[index][1] = response['items'][index]['volumeInfo']['title']
-                  books_data[index][2] = response['items'][index]['volumeInfo']['author']
-                  data_acquisition += 1
-                  break if data_acquisition == 10
-                elsif isbn = response.dig('items', index, 'volumeInfo', 'isbn_13') then
-                  books_data[index][0] << isbn
+                # ISBNが存在しなければスキップ
+                type = response.dig('items', index, 'volumeInfo', 'industryIdentifiers', 'type')
+                if type then
+                  books_data[index][0] << response.dig('items', index, 'volumeInfo', 'industryIdentifiers', type)
                   books_data[index][1] = response['items'][index]['volumeInfo']['title']
                   books_data[index][2] = response['items'][index]['volumeInfo']['author']
                   data_acquisition += 1
@@ -70,7 +66,7 @@ class WebhookController < ApplicationController
               break
             end
           end
-          # 書籍のデータが何件あるかで条件を分岐したい
+          # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data[userId] then
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
