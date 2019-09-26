@@ -5,8 +5,8 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  GOOGLEAPI_ENDPOINT "https://www.googleapis.com"
-  CALILAPI_ENDPOINT "http://api.calil.jp"
+  GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+  CALILAPI_ENDPOINT = "http://api.calil.jp"
 
   def client
     @client ||= Line::Bot::Client.new { |config|
