@@ -29,13 +29,12 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          user_query = URI.escape("人間失格", /[^-_.!~*'()a-zA-Z\d]/u)
+          user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           begin
             response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
             http.get(uri.request_uri)
             end
-            # response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
           rescue => e
             p e
           end
