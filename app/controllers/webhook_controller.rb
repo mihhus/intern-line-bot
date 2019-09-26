@@ -16,7 +16,6 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
-    response_json = ""
     text = ""
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
@@ -38,11 +37,11 @@ class WebhookController < ApplicationController
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           # loop do
-          uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&startIndex=" + startIndex.to_s)
+          uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
             begin
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
                 http.get(uri.request_uri)
-                response_json = JSON.parse(response.body)
+                @response_json = JSON.parse(response.body)
               end
             rescue => e
               text << "Googlegaが悪いよー"
