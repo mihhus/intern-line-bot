@@ -30,16 +30,17 @@ class WebhookController < ApplicationController
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           text = ""
+          response_json = ""
           begin
             response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
               http.get(uri.request_uri)
-              response_json = JSON.parse(response.body)
-              response_json['items'].each do |item|
-                text << item['volumeInfo']['title'] + "\n"
-              end
             end
+            response_json = JSON.parse(response.body)
           rescue => e
             p e
+          end
+          response_json['items'].each do |item|
+            text << item['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -56,18 +57,18 @@ class WebhookController < ApplicationController
           longitude = event.message['longitude']
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           text = ""
+          response_json = ""
           begin
             response = Net::HTTP.start(uri.host, uri.port) do |http|
               http.get(uri.request_uri)
-              response_json = JSON.parse(response.body)
-              for value in response_json do
-                text << "#{value["short"]}\n"
-              end
             end
+            response_json = JSON.parse(response.body)
           rescue => e
             p e
           end
-
+          for value in response_json do
+            text << "#{value["short"]}\n"
+          end
           message = {
             type: 'text',
             text: text
@@ -79,6 +80,6 @@ class WebhookController < ApplicationController
     head :ok
   end
 private
-  CALILAPI_ENDPOINT = "http://api.calil.jp"
-  GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+CALILAPI_ENDPOINT = "http://api.calil.jp"
+GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
