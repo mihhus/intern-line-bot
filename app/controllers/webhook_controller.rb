@@ -32,8 +32,8 @@ class WebhookController < ApplicationController
         case event.type
         when Line::Bot::Event::MessageType::Text
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
-          books_data = []
-          data_acquisition = 0
+          # books_data = []
+          # data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           # loop do
@@ -45,8 +45,8 @@ class WebhookController < ApplicationController
             rescue => e
               text << "Googlegaが悪いよー"
             end
+            response_json = JSON.parse(response.body)
 =begin
-                response_json = JSON.parse(response.body)
             response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
               if type = item.dig('volumeInfo', 'industryIdentifiers') then
