@@ -38,8 +38,7 @@ class WebhookController < ApplicationController
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           # loop do
-            # uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&startIndex=" + startIndex)
-            uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
+          uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&startIndex=" + startIndex.to_s)
             begin
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
                 http.get(uri.request_uri)
