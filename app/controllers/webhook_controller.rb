@@ -46,7 +46,7 @@ class WebhookController < ApplicationController
             rescue => e
               text << "Googlegaが悪いよー"
             end
-            response_json['items'].each do |item|
+            @response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
               if type = item.dig('volumeInfo', 'industryIdentifiers') then
                 if type = type[0].dig('type') then
