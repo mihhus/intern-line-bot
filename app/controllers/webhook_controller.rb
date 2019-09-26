@@ -37,7 +37,7 @@ class WebhookController < ApplicationController
           data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
-          loop do
+          # loop do
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&startIndex=" + startIndex)
             begin
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -60,7 +60,7 @@ class WebhookController < ApplicationController
               end
             end
             startIndex += 1
-          end
+          # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
 =begin
           if @@user_data[userId] then
