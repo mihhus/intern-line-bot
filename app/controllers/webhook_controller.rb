@@ -31,6 +31,7 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+=begin
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           text = ""
@@ -114,12 +115,13 @@ class WebhookController < ApplicationController
               @@user_data[userId][:user_query] = user_query
               text << "位置情報を入力してね\n"
             end
+=end
+            text = "test"
             message = {
               type: 'text',
               text: text
             }
             client.reply_message(event['replyToken'], message)
-          end
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
@@ -132,7 +134,6 @@ class WebhookController < ApplicationController
           @@user_data[userId][:location][:longitude] = longitude
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           text = ""
-          response_json = ""
           begin
             response = Net::HTTP.start(uri.host, uri.port) do |http|
               http.get(uri.request_uri)
