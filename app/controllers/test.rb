@@ -1,7 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'json'
-GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+GOOGLEAPI_ENDPOINT "https://www.googleapis.com"
 user_query = URI.escape("人間失格", /[^-_.!~*'()a-zA-Z\d]/u)
 uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
 begin

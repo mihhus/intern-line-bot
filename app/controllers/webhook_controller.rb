@@ -15,8 +15,8 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
-    GOOGLEAPI_ENDPOINT "https://www.googleapis.com"
-    CALILAPI_ENDPOINT "http://api.calil.jp"
+    GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+    CALILAPI_ENDPOINT = "http://api.calil.jp"
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
