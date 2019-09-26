@@ -44,7 +44,7 @@ class WebhookController < ApplicationController
                 @response_json = JSON.parse(response.body)
               end
             rescue => e
-              text << "Googlegaが悪いよー"
+              text << e
             end
 =begin
             response_json['items'].each do |item|
