@@ -33,7 +33,7 @@ class WebhookController < ApplicationController
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           text = ""
           begin
-            response = Net::HTTP.start(uri.host, uri.port, user_ssl: uri.scheme == 'https') do |http|
+              response = Net::HTTP.start(uri.host, uri.port, user_ssl: uri.scheme == 'https') do |http|
               http.get(uri.request_uri)
             end
           rescue => e
@@ -54,6 +54,7 @@ class WebhookController < ApplicationController
           tf = Tempfile.open("content")
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
+=begin
           calil_appkey = ENV["CALIL_APPKEY"]
           latitude = event.message['latitude']
           longitude = event.message['longitude']
@@ -76,6 +77,7 @@ class WebhookController < ApplicationController
           text: text
         }
         client.reply_message(event['replyToken'], message)
+=end
         end
       end
     }
