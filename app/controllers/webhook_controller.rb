@@ -39,8 +39,9 @@ class WebhookController < ApplicationController
             text = "書籍情報の取得に失敗しましたGoogleが悪いよー"
           end
           text = ""
+          response_json = JSON.parse(response.body)
           for index in 0..9 do
-            text << JSON.parse(response.body)['items'][index]['volumeInfo']['title'] + "\n"
+            text << response_json['items'][index]['volumeInfo']['title'] + "\n"
           end
           message = {
             type: 'text',
@@ -64,7 +65,8 @@ class WebhookController < ApplicationController
             text = "書籍情報の取得に失敗しましたカーリルが悪いよー"
           end
         text = ""
-        for value in JSON.parse(response.body) do
+        response_json = JSON.parse(response.body)
+        for value in response_json do
           text << "#{value["short"]}\n"
         end
 

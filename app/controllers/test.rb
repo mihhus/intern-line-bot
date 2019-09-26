@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'json'
 GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 user_query = URI.escape("人間失格", /[^-_.!~*'()a-zA-Z\d]/u)
 uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
@@ -11,9 +12,11 @@ begin
 rescue => e
   p e
 end
-print response.body
-__END__
+response_json = JSON.parse(response.body)
 
+print response_json['items'][0]['volumeInfo']['title']
+
+__END__
 case response
 when Net::HTTPSuccess
   print response.body
