@@ -58,23 +58,23 @@ class WebhookController < ApplicationController
           longitude = event.message['longitude']
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           begin
-            response = Net::HTTP.start(uri.host, usi.port) do |http|
-              http.get(uri.request_uri)
+            response = Net::HTTP.start(uri.host, uri.port) do |http|
+            http.get(uri.request_uri)
             end
           rescue => e
-            text = "書籍情報の取得に失敗しましたカーリルが悪いよー"
+            p e
           end
-        text = ""
-        response_json = JSON.parse(response.body)
-        for value in response_json do
-          text << "#{value["short"]}\n"
-        end
+          text = ""
+          response_json = JSON.parse(response.body)
+          for value in response_json do
+            text << "#{value["short"]}\n"
+          end
 
-        message = {
-          type: 'text',
-          text: text
-        }
-        client.reply_message(event['replyToken'], message)
+          message = {
+            type: 'text',
+            text: text
+          }
+          client.reply_message(event['replyToken'], message)
         end
       end
     }
