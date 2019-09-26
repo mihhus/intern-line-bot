@@ -34,44 +34,61 @@ class WebhookController < ApplicationController
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query)
           text = ""
           response_json = ""
-          begin
-            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-              http.get(uri.request_uri)
-            end
-            response_json = JSON.parse(response.body)
-          rescue => e
-            p e
-          end
-          isbn_numbers = []
+          books_data = []
           data_acquisition = 0
           startIndex = 0
           loop do
+            response_json = ""
+            begin
+              response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+                http.get(uri.request_uri)
+              end
+              response_json = JSON.parse(response.body)
+            rescue => e
+              text << "Googlegaが悪いよー"
+            end
             response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/books/v1/volumes?q=" + user_query_escape + "&startIndex=" + startIndex)))
             startIndex += 1
             if response_json['items'] then
               10.times do |index|
                 if isbn = response.dig('items', index, 'volumeInfo', 'isbn_10') then
-                  isbn_numbers << isbn
+                  books_data[index][0] << isbn
+                  books_data[index][1] = response['items'][index]['volumeInfo']['title']
+                  books_data[index][2] = response['items'][index]['volumeInfo']['author']
                   data_acquisition += 1
                   break if data_acquisition == 10
                 elsif isbn = response.dig('items', index, 'volumeInfo', 'isbn_13') then
-                  isbn_numbers << isbn
+                  books_data[index][0] << isbn
+                  books_data[index][1] = response['items'][index]['volumeInfo']['title']
+                  books_data[index][2] = response['items'][index]['volumeInfo']['author']
                   data_acquisition += 1
                   break if data_acquisition == 10
                 end
               end
+            else
+              # itemsが存在しない場合break、書籍検索結果自体がないor ISBNを持つ書籍が10件に満たない場合となる
+              break
             end
           end
+          # 書籍のデータが何件あるかで条件を分岐したい
           if @@user_data[userId] then
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
               endpoint = "http://api.calil.jp"
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
-              system_id = []
+              library_data = []
               response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
-              for value in response do
-                system_id.store(value["systemid"])
+              response.each_with_index do |value, index|
+                library_data[index][0] = value["systemid"]
+                library_data[index][1] = value["short"]
+              end
+              response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")))
+              # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
+              while response["continue"] == 1
+                # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
+                # polling中に適宜情報をクライアントに提示する機能は実装しない
+                response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")))[/\[.*\]/]
               end
             else
               @@user_data[userId][:user_query] = user_query
