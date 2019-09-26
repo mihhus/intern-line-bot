@@ -110,6 +110,7 @@ class WebhookController < ApplicationController
               text << "位置情報を入力してね\n"
             end
           end
+          text = "test"
           message = {
             type: 'text',
             text: text
