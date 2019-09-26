@@ -50,12 +50,12 @@ class WebhookController < ApplicationController
             startIndex += 1
             if response_json['items'] then
               10.times do |index|
-                if response_json['items'][index]['volumeInfo']['isbn_10'] then
-                  isbn_numbers << response_json['items'][index]['volumeInfo']['isbn_10']
+                if isbn = response.dig('items', index, 'volumeInfo', 'isbn_10') then
+                  isbn_numbers << isbn
                   data_acquisition += 1
                   break if data_acquisition == 10
-                elsif response_json['items'][index]['volumeInfo']['isbn_13'] then
-                  isbn_numbers << response_json['items'][index]['volumeInfo']['isbn_13']
+                elsif isbn = response.dig('items', index, 'volumeInfo', 'isbn_13') then
+                  isbn_numbers << isbn
                   data_acquisition += 1
                   break if data_acquisition == 10
                 end
@@ -65,6 +65,14 @@ class WebhookController < ApplicationController
           if @@user_data[userId] then
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
+              endpoint = "http://api.calil.jp"
+              latitude = @@user_data[userId][:location][:latitude]
+              longitude = @@user_data[userId][:location][:longitude]
+              system_id = []
+              response = JSON.parse(Net::HTTP.get(URI.parse(endpoint + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")))
+              for value in response do
+                system_id.store(value["systemid"])
+              end
             else
               @@user_data[userId][:user_query] = user_query
               text += "位置情報を入力してね\n"
