@@ -5,6 +5,8 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
+  GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+  CALILAPI_ENDPOINT = "http://api.calil.jp"
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -15,8 +17,6 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
-    GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
-    CALILAPI_ENDPOINT = "http://api.calil.jp"
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
