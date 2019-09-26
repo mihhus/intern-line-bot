@@ -46,6 +46,7 @@ class WebhookController < ApplicationController
             rescue => e
               text << "Googlegaが悪いよー"
             end
+=begin
             @response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
               if type = item.dig('volumeInfo', 'industryIdentifiers') then
@@ -58,6 +59,7 @@ class WebhookController < ApplicationController
                 end
               end
             end
+=end
             startIndex += 1
           # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
@@ -114,7 +116,7 @@ class WebhookController < ApplicationController
             end
           end
 =end
-          text = "test"
+          text = @response_json
           message = {
             type: 'text',
             text: text
