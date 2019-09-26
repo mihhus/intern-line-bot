@@ -5,7 +5,7 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  @@user_data = []
+  @@user_data = {}
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -145,7 +145,6 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
-          text = "testing"
           message = {
             type: 'text',
             text: text
