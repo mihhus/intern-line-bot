@@ -146,8 +146,7 @@ class WebhookController < ApplicationController
           calil_appkey = ENV["CALIL_APPKEY"]
           latitude = event.message['latitude']
           longitude = event.message['longitude']
-          @@user_data[userId] = {:location => {:latitude => latitude}}
-          @@user_data[userId] = {:location => {:longitude => longitude}}
+          @@user_data[userId] = {:location => {:latitude => latitude, :longitude => longitude}}
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           begin
             response = Net::HTTP.start(uri.host, uri.port) do |http|
