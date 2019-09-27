@@ -115,7 +115,6 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text = ""
               books_data.length do |book_index|
                 text << "title: #{books_data[book_index][1]}\n"
                 library_data.length do |library_index|
