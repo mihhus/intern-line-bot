@@ -130,6 +130,8 @@ class WebhookController < ApplicationController
 =end
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
+          @@user_data[userId] = {:user_query => user_query}
+
           text << userId
           text << @@user_data.to_s
           text << books_data.length.to_s
