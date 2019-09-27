@@ -73,7 +73,6 @@ class WebhookController < ApplicationController
 
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data.has_key?(userId) then
-            text << "ugoite"
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
               # Locationがすでに設定されている
@@ -113,6 +112,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
+              text << "#{@response_json['continue']}"
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 1
                 text << "#{book_item[1]}\n"
