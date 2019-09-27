@@ -115,9 +115,9 @@ class WebhookController < ApplicationController
               end
               text << "syuturyokunotoko\n"
               books_data.each_with_index do |book_item, book_index|
-                text << "title: #{book_item[1]}\n"
+                text << "#{book_item[1]}\n"
                 library_data.each_with_index do |library_item, library_index|
-                  # text << "  #{library_data[library_index][1]}: #{@response_json['books'][book_item[0]]['libkey'].to_a}\n"
+                  text << "  #{library_data[library_index][1]}: #{@response_json['books'][book_item[0]]['libkey'].to_a}\n"
                 end
               end
             else
