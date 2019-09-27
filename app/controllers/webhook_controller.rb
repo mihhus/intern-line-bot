@@ -77,6 +77,7 @@ class WebhookController < ApplicationController
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
+              longitude = @@user_data[userId][:location][:longitude]
               library_data = []
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
               begin
@@ -127,6 +128,7 @@ class WebhookController < ApplicationController
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << books_data.length.to_s
           text << "test"
+          text << userId
           message = {
             type: 'text',
             text: text
