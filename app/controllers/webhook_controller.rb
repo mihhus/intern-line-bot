@@ -52,6 +52,7 @@ class WebhookController < ApplicationController
             # ISBNが存在しなければスキップ
             if industry = item.dig('volumeInfo', 'industryIdentifiers') then
               if industry.kind_of?(Hash) then
+=begin
                 type = industry.dig('type')
                 if type == "ISBN_10" || type == "ISBN_13" then
                   # books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
@@ -61,12 +62,14 @@ class WebhookController < ApplicationController
                 if type == "ISBN_10" || type == "ISBN_13" then
 
                 end
+=end
               end
                 data_acquisition += 1
                 # break if data_acquisition == 10
             end
           end
           startIndex += 1
+          # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
 =begin
           if @@user_data[userId] then
