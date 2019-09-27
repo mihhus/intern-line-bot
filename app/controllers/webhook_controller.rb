@@ -102,7 +102,6 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
-=begin
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
@@ -116,6 +115,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
+=begin
               text = ""
               books_data.length do |book_index|
                 text << "title: #{books_data[book_index][1]}\n"
