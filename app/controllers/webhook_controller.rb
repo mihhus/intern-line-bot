@@ -72,9 +72,9 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
-          if @@user_data[userId] then
+          if @@user_data.has_key?(userId) then
             text << "ugoite"
-            if @@user_data[userId][:location] then
+            if @@user_data[userId].has_key?(:location) then
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
@@ -128,7 +128,6 @@ class WebhookController < ApplicationController
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << books_data.length.to_s
           text << "test"
-          text << userId
           message = {
             type: 'text',
             text: text
