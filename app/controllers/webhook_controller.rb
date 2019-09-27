@@ -112,7 +112,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << "#{@response_json['continue']}"
+              text << "#{@response_json.dig('continue')}"
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 1
                 text << "#{book_item[1]}\n"
@@ -121,7 +121,6 @@ class WebhookController < ApplicationController
                 end
               end
             end
-              text << "位置情報を入力してね"
           end
 
           text << "text\n"
