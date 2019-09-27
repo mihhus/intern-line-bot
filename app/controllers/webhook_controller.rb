@@ -74,6 +74,7 @@ class WebhookController < ApplicationController
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if Constants::USER_DATA.has_key?(userId) then
             text << "ugoite"
+=begin
             if Constants::USER_DATA[userId].has_key?(:location) then
               # Locationがすでに設定されている
               latitude = Constants::USER_DATA[userId][:location][:latitude]
@@ -121,13 +122,12 @@ class WebhookController < ApplicationController
                   text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
                 end
               end
-=end
             else
               Constants::USER_DATA[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
             end
+=end
           end
-          Constants::USER_DATA[userId] = {:user_query => user_query}
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << userId
           text << Constants::USER_DATA.to_s
