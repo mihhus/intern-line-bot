@@ -130,7 +130,7 @@ class WebhookController < ApplicationController
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << userId
-          text <<@@user_data
+          text << @@user_data.to_s
           text << books_data.length.to_s
           text << "test"
           message = {
