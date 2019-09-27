@@ -116,6 +116,7 @@ class WebhookController < ApplicationController
                 end
               end
               text << "syuturyokunotoko\n"
+=begin
               books_data.each_with_index do |book_item, book_index|
                 # text << "title\n"
                 # text << "title: #{books_data[book_index][1]}\n"
@@ -124,6 +125,7 @@ class WebhookController < ApplicationController
                   # text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
                 # end
               end
+=end
             else
               @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
@@ -134,7 +136,7 @@ class WebhookController < ApplicationController
           text << userId
           text << @@user_data.to_s
           text << "books_data.length\n"
-          text << books_data.length.to_s
+          text << books_data.to_s
           text << "lib_data.length\n"
           text << library_data.length.to_s
           text << "test"
