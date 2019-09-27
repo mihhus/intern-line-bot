@@ -51,15 +51,17 @@ class WebhookController < ApplicationController
           @response_json['items'].each do |item|
             # ISBNが存在しなければスキップ
             if type = item.dig('volumeInfo', 'industryIdentifiers') then
-=begin
-              if type = type[0].dig('type') then
-                if type =="ISBN_10" or type == "ISBN_13" then
-                  books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
-                  data_acquisition += 1
-                  # break if data_acquisition == 10
-                end
+              if type.kind_of?(Hash) then
+                type = type.dig('type')
+              elsif type.kind_of?(Array) then
+                type = type[0].dig('type')
               end
-=end
+
+              if type =="ISBN_10" or type == "ISBN_13" then
+                books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                data_acquisition += 1
+                # break if data_acquisition == 10
+              end
             end
           end
           startIndex += 1
