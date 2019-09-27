@@ -113,7 +113,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << @response_json['books']
+              text << @response_json['books'].to_s
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 3
                 text << "#{book_item[1]}\n"
