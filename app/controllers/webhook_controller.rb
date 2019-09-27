@@ -90,7 +90,6 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
-=begin
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
@@ -103,6 +102,7 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
+=begin
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
