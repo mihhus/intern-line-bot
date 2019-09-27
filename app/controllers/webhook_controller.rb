@@ -47,20 +47,19 @@ class WebhookController < ApplicationController
           rescue => e
             text << "Googlegaが悪いよー"
           end
-=begin
-            @response_json['items'].each do |item|
-              # ISBNが存在しなければスキップ
-              if type = item.dig('volumeInfo', 'industryIdentifiers') then
-                if type = type[0].dig('type') then
-                  if type =="ISBN_10" or type == "ISBN_13" then
-                    books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
-                    data_acquisition += 1
-                    break if data_acquisition == 10
-                  end
+
+          @response_json['items'].each do |item|
+            # ISBNが存在しなければスキップ
+            if type = item.dig('volumeInfo', 'industryIdentifiers') then
+              if type = type[0].dig('type') then
+                if type =="ISBN_10" or type == "ISBN_13" then
+                  books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                  data_acquisition += 1
+                  break if data_acquisition == 10
                 end
               end
             end
-=end
+          end
           startIndex += 1
           # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
