@@ -86,7 +86,7 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
-              response_json.each_with_index do |value, index|
+              @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
               uri = URI.parse(endpoint + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")
@@ -94,19 +94,19 @@ class WebhookController < ApplicationController
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
                 end
-                response_json = JSON.parse(response.body)
+                @response_json = JSON.parse(response.body)
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
-              while response_json["continue"] == 1 do
+              while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
-                uri = URI.parse(endpoint + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")
+                uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")
                 begin
                   response = Net::HTTP.start(uri.host, uri.port) do |http|
                     http.get(uri.request_uri)
                   end
-                  response_json = JSON.parse(response.body[/\[.*\]/])
+                  @response_json = JSON.parse(response.body[/\[.*\]/])
                 rescue => e
                   text << "カーリルが悪いよー\n"
                 end
@@ -115,7 +115,7 @@ class WebhookController < ApplicationController
               books_data.length do |book_index|
                 text << "title: #{books_data[book_index][1]}\n"
                 library_data.length do |library_index|
-                  text << "  #{library_data[library_index][1]}: #{response['books'][books_data[book_index][0]]['libkey'].to_a}\n"
+                  text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
                 end
               end
             else
