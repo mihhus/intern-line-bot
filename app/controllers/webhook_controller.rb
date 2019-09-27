@@ -112,7 +112,6 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << "#{@response_json.dig('continue')}"
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 1
                 text << "#{book_item[1]}\n"
