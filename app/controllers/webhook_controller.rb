@@ -72,7 +72,6 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
-=begin
           if @@user_data[userId] then
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
@@ -124,7 +123,6 @@ class WebhookController < ApplicationController
               text << "位置情報を入力してね\n"
             end
           end
-=end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << books_data.length.to_s
           text << "test"
