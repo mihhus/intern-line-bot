@@ -62,10 +62,8 @@ class WebhookController < ApplicationController
 
                 end
               end
-
                 data_acquisition += 1
                 # break if data_acquisition == 10
-              end
             end
           end
           startIndex += 1
