@@ -5,7 +5,7 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  @@user_data = {}
+  $user_data = {}
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -73,12 +73,12 @@ class WebhookController < ApplicationController
           end
 
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
-          if @@user_data.has_key?(userId) then
+          if $user_data.has_key?(userId) then
             text << "ugoite"
-            if @@user_data[userId].has_key?(:location) then
+            if $user_data[userId].has_key?(:location) then
               # Locationがすでに設定されている
-              latitude = @@user_data[userId][:location][:latitude]
-              longitude = @@user_data[userId][:location][:longitude]
+              latitude = $user_data[userId][:location][:latitude]
+              longitude = $user_data[userId][:location][:longitude]
               library_data = []
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
               begin
@@ -124,13 +124,13 @@ class WebhookController < ApplicationController
               end
 =end
             else
-              @@user_data[userId] = {:user_query => user_query}
+              $user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
             end
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << userId
-          text << @@user_data.to_s
+          text << $user_data.to_s
           text << books_data.length.to_s
           text << "test"
           message = {
@@ -146,7 +146,7 @@ class WebhookController < ApplicationController
           calil_appkey = ENV["CALIL_APPKEY"]
           latitude = event.message['latitude']
           longitude = event.message['longitude']
-          @@user_data[userId] = {:location => {:latitude => latitude, :longitude => longitude}}
+          $user_data[userId] = {:location => {:latitude => latitude, :longitude => longitude}}
           uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
           begin
             response = Net::HTTP.start(uri.host, uri.port) do |http|
@@ -160,7 +160,7 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
-          text << @@user_data.to_s
+          text << $user_data.to_s
           message = {
             type: 'text',
             text: text
