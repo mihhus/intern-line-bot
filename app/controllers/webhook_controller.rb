@@ -117,7 +117,7 @@ class WebhookController < ApplicationController
             end
           end
 =end
-          text << @response_json.to_s
+          text << @response_json['items'][0]['volumeInfo']['title'].to_s
           message = {
             type: 'text',
             text: text
