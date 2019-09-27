@@ -124,10 +124,11 @@ class WebhookController < ApplicationController
 =end
             else
               @@user_data[userId] = {:user_query => user_query}
-              text << "位置情報を入力してね\n"
+              text << "位置情報を入力してね"
             end
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
+          text << userId
           text << books_data.length.to_s
           text << "test"
           message = {
