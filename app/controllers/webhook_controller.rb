@@ -50,8 +50,8 @@ class WebhookController < ApplicationController
 
           @response_json['items'].each do |item|
             # ISBNが存在しなければスキップ
-=begin
             if type = item.dig('volumeInfo', 'industryIdentifiers') then
+=begin
               if type = type[0].dig('type') then
                 if type =="ISBN_10" or type == "ISBN_13" then
                   books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
@@ -59,8 +59,8 @@ class WebhookController < ApplicationController
                   # break if data_acquisition == 10
                 end
               end
-            end
 =end
+            end
           end
           startIndex += 1
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
