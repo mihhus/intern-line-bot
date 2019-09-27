@@ -37,7 +37,7 @@ class WebhookController < ApplicationController
           data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
-          # loop do
+          loop do
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
           begin
             response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -54,20 +54,22 @@ class WebhookController < ApplicationController
               if industry.kind_of?(Hash) then
                 type = industry.dig('type')
                 if type == "ISBN_10" || type == "ISBN_13" then
-                  books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                  books_data.push([industry.dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                  data_acquisition += 1
+                  break if data_acquisition == 10
                 end
               elsif industry.kind_of?(Array) then
                 type = industry[0].dig('type')
                 if type == "ISBN_10" || type == "ISBN_13" then
-
+                  books_data.push([industry[0].dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                  data_acquisition += 1
+                  break if data_acquisition == 10
                 end
               end
-                data_acquisition += 1
-                # break if data_acquisition == 10
             end
           end
           startIndex += 1
-          # end
+          end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
 =begin
           if @@user_data[userId] then
