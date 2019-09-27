@@ -76,6 +76,7 @@ class WebhookController < ApplicationController
           if @@user_data.has_key?(userId) then
             text << "ugoite"
             if @@user_data[userId].has_key?(:location) then
+              calil_appkey = ENV["CALIL_APPKEY"]
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
