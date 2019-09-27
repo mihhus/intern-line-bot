@@ -5,7 +5,6 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  Constants::USER_DATA = {}
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -128,6 +127,7 @@ class WebhookController < ApplicationController
               text << "位置情報を入力してね"
             end
           end
+          Constants::USER_DATA[userId] = {:user_query => user_query}
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           text << userId
           text << Constants::USER_DATA.to_s
