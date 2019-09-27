@@ -33,7 +33,7 @@ class WebhookController < ApplicationController
         when Line::Bot::Event::MessageType::Text
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
-          # books_data = []
+          books_data = []
           # data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
