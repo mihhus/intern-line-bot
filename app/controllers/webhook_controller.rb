@@ -122,7 +122,6 @@ class WebhookController < ApplicationController
             end
           end
 
-          text << "text\n"
           message = {
             type: 'text',
             text: text
