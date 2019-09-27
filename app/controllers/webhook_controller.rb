@@ -73,6 +73,7 @@ class WebhookController < ApplicationController
           end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data[userId] then
+            text << "ugoite"
             if @@user_data[userId][:location] then
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
