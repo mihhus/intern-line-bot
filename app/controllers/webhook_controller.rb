@@ -123,7 +123,7 @@ class WebhookController < ApplicationController
               end
 =end
             else
-              @@user_data[userId][:user_query] = user_query
+              @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね\n"
             end
           end
