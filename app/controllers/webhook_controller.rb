@@ -62,14 +62,12 @@ class WebhookController < ApplicationController
                     # text << item['volumeInfo']['title']
                     # text << item['volumeInfo']['title']
                     data_acquisition += 1
-                    break if data_acquisition == 10
                   end
                 elsif industry.kind_of?(Array) then
                   type = industry[0].dig('type')
                   if type == "ISBN_10" || type == "ISBN_13" then
                     books_data.push([industry[0].dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
                     data_acquisition += 1
-                    break if data_acquisition == 10
                   end
                 end
               end
