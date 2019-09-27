@@ -58,7 +58,7 @@ class WebhookController < ApplicationController
                   if type == "ISBN_10" || type == "ISBN_13" then
                     books_data.push([industry.dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
                     # text << industry.dig('identifier')
-                    text << "text"
+                    # text << "text"
                     # text << item['volumeInfo']['title']
                     # text << item['volumeInfo']['title']
                     data_acquisition += 1
