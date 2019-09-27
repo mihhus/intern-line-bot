@@ -53,12 +53,16 @@ class WebhookController < ApplicationController
             if type = item.dig('volumeInfo', 'industryIdentifiers') then
               if type.kind_of?(Hash) then
                 type = type.dig('type')
+                if type == "ISBN_10" or type == "ISBN_13" then
+                  # books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                end
               elsif type.kind_of?(Array) then
                 type = type[0].dig('type')
+                if type == "ISBN_10" or type == "ISBN_13" then
+
+                end
               end
 
-              if type =="ISBN_10" or type == "ISBN_13" then
-                books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
                 data_acquisition += 1
                 # break if data_acquisition == 10
               end
