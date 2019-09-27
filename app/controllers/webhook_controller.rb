@@ -93,7 +93,6 @@ class WebhookController < ApplicationController
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
-=begin
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
