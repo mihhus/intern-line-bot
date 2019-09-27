@@ -71,6 +71,7 @@ class WebhookController < ApplicationController
             break if data_acquisition > 10
             startIndex += 1
           end
+
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data.has_key?(userId) then
             text << "ugoite"
@@ -159,6 +160,7 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
+          text << userId
           message = {
             type: 'text',
             text: text
