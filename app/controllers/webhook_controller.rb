@@ -34,7 +34,7 @@ class WebhookController < ApplicationController
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           books_data = []
-          # data_acquisition = 0
+          data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           # loop do
@@ -48,7 +48,7 @@ class WebhookController < ApplicationController
             text << "Googlegaが悪いよー"
           end
 
-          @response_json['items'].each do |item|
+          # @response_json['items'].each do |item|
             # ISBNが存在しなければスキップ
             # if industry = item.dig('volumeInfo', 'industryIdentifiers') then
               # if industry.kind_of?(Hash) then
@@ -67,7 +67,7 @@ class WebhookController < ApplicationController
                 data_acquisition += 1
                 # break if data_acquisition == 10
             # end
-          end
+          # end
           startIndex += 1
           # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
