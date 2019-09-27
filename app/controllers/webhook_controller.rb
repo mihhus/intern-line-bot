@@ -115,7 +115,6 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-=begin
               text = ""
               books_data.length do |book_index|
                 text << "title: #{books_data[book_index][1]}\n"
@@ -126,7 +125,6 @@ class WebhookController < ApplicationController
             else
               @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
-=end
             end
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
