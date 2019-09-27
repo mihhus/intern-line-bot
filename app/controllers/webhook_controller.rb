@@ -124,7 +124,6 @@ class WebhookController < ApplicationController
                   # text << "  author\n"
                   # text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
               end
-=end
             else
               @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
