@@ -48,7 +48,7 @@ class WebhookController < ApplicationController
               text << "Googlegaが悪いよー"
             end
             
-            break if !@response_json.has_key?('items')
+            break unless @response_json.has_key?('items')
             @response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
               if industry = item.dig('volumeInfo', 'industryIdentifiers') then
@@ -126,6 +126,7 @@ class WebhookController < ApplicationController
           end
 =end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
+          text << books_data.length.to_s
           text << "test"
           message = {
             type: 'text',
