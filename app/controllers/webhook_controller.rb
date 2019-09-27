@@ -16,7 +16,6 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
-    text = ""
 
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
@@ -31,6 +30,7 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           books_data = []
           library_data = []
