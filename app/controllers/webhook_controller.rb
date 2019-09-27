@@ -115,10 +115,10 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << "syuturyokunotoko"
-              books_data.length do |book_index|
+              text << "syuturyokunotoko\n"
+              books_data.length.items do |book_index|
                 text << "title: #{books_data[book_index][1]}\n"
-                library_data.length do |library_index|
+                library_data.length.items do |library_index|
                   text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
                 end
               end
