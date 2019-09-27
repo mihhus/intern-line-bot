@@ -117,7 +117,6 @@ class WebhookController < ApplicationController
               end
               text << "syuturyokunotoko\n"
               books_data.each_with_index do |book_item, book_index|
-                text << "title\n"
                 # text << "title: #{books_data[book_index][1]}\n"
                 # library_data.each_with_index do |library_item, library_index|
                   # text << "  author\n"
