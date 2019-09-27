@@ -5,7 +5,7 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  @@user_data = {}
+  @@user_data = {"test" => "tester"}
 
   def client
     @client ||= Line::Bot::Client.new { |config|
