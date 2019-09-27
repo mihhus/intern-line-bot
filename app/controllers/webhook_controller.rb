@@ -160,7 +160,7 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
-          text << userId
+          text << @@user_data.to_s
           message = {
             type: 'text',
             text: text
