@@ -34,6 +34,7 @@ class WebhookController < ApplicationController
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           books_data = []
+          library_data = []
           data_acquisition = 0
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
@@ -80,7 +81,6 @@ class WebhookController < ApplicationController
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
-              library_data = []
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
@@ -92,7 +92,6 @@ class WebhookController < ApplicationController
               end
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
-                text << library_data[0].to_s
                 text << "\n"
               end
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")
@@ -139,6 +138,7 @@ class WebhookController < ApplicationController
           text << @@user_data.to_s
           text << "books_data.length\n"
           text << books_data.length.to_s
+          text << library_data[0]
           text << "test"
           message = {
             type: 'text',
