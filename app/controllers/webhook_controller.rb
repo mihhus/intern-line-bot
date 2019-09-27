@@ -39,14 +39,14 @@ class WebhookController < ApplicationController
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           # loop do
           uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
-            begin
-              response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
-                http.get(uri.request_uri)
-              end
-              @response_json = JSON.parse(response.body)
-            rescue => e
-              text << "Googlegaが悪いよー"
+          begin
+            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+              http.get(uri.request_uri)
             end
+            @response_json = JSON.parse(response.body)
+          rescue => e
+            text << "Googlegaが悪いよー"
+          end
 =begin
             @response_json['items'].each do |item|
               # ISBNが存在しなければスキップ
@@ -61,7 +61,7 @@ class WebhookController < ApplicationController
               end
             end
 =end
-            startIndex += 1
+          startIndex += 1
           # end
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
 =begin
@@ -117,7 +117,7 @@ class WebhookController < ApplicationController
             end
           end
 =end
-          text << @response_json
+          text << @response_json.to_s
           message = {
             type: 'text',
             text: text
