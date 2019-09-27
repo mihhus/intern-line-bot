@@ -53,12 +53,12 @@ class WebhookController < ApplicationController
             if industry = item.dig('volumeInfo', 'industryIdentifiers') then
               if industry.kind_of?(Hash) then
                 type = industry.dig('type')
-                if type == "ISBN_10" or type == "ISBN_13" then
+                if type == "ISBN_10" || type == "ISBN_13" then
                   # books_data.push([item.dig('volumeInfo', 'industryIdentifiers', 'identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
                 end
               elsif industry.kind_of?(Array) then
                 type = industry[0].dig('type')
-                if type == "ISBN_10" or type == "ISBN_13" then
+                if type == "ISBN_10" || type == "ISBN_13" then
 
                 end
               end
