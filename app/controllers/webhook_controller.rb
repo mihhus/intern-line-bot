@@ -55,13 +55,13 @@ class WebhookController < ApplicationController
                 if industry.kind_of?(Hash) then
                   type = industry.dig('type')
                   if type == "ISBN_10" || type == "ISBN_13" then
-                    books_data.push([industry.dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']])
+                    books_data.push([industry.dig('identifier'), item['volumeInfo']['title']])
                     data_acquisition += 1
                   end
                 elsif industry.kind_of?(Array) then
                   type = industry[0].dig('type')
                   if type == "ISBN_10" || type == "ISBN_13" then
-                    books_data.push([industry[0].dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']])
+                    books_data.push([industry[0].dig('identifier'), item['volumeInfo']['title']])
                     data_acquisition += 1
                   end
                 end
@@ -115,7 +115,7 @@ class WebhookController < ApplicationController
               end
               text << "syuturyokunotoko\n"
               books_data.each_with_index do |book_item, book_index|
-                text << "title: #{books_data[book_index][1]}\n"
+                text << "title: #{book_item[1]}\n"
                 # library_data.each_with_index do |library_item, library_index|
                   # text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
               end
