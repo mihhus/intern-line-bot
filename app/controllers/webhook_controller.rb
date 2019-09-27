@@ -88,6 +88,7 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
+=begin
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
@@ -120,6 +121,7 @@ class WebhookController < ApplicationController
                   text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
                 end
               end
+=end
             else
               @@user_data[userId][:user_query] = user_query
               text << "位置情報を入力してね\n"
