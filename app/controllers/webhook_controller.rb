@@ -92,6 +92,7 @@ class WebhookController < ApplicationController
               end
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
+                text << value["short"]
               end
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")
               begin
@@ -137,8 +138,6 @@ class WebhookController < ApplicationController
           text << @@user_data.to_s
           text << "books_data.length\n"
           text << books_data.length.to_s
-          text << "lib_data.length\n"
-          text << library_data[0]
           text << "test"
           message = {
             type: 'text',
