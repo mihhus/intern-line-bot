@@ -91,7 +91,7 @@ class WebhookController < ApplicationController
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
-              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join('')}&format=json&callback=no")
+              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&systemid=#{library_data.map{|row| row[0]}.join(',')}&isbn=#{books_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
@@ -118,7 +118,7 @@ class WebhookController < ApplicationController
                 break if book_index == 3
                 text << "#{book_item[1]}\n"
                 library_data.each_with_index do |library_item, library_index|
-                  # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0]).to_a}\n"
+                  text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
                 end
               end
             else
