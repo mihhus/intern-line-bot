@@ -50,7 +50,7 @@ class WebhookController < ApplicationController
 
           @response_json['items'].each do |item|
             # ISBNが存在しなければスキップ
-            if industry = item.dig('volumeInfo', 'industryIdentifiers') then
+            # if industry = item.dig('volumeInfo', 'industryIdentifiers') then
               # if industry.kind_of?(Hash) then
 =begin
                 type = industry.dig('type')
@@ -66,7 +66,7 @@ class WebhookController < ApplicationController
               # end
                 data_acquisition += 1
                 # break if data_acquisition == 10
-            end
+            # end
           end
           startIndex += 1
           # end
