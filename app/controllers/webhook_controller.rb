@@ -75,6 +75,7 @@ class WebhookController < ApplicationController
           # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data.has_key?(userId) then
             text << "ugoite"
+=begin
             if @@user_data[userId].has_key?(:location) then
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
@@ -89,6 +90,7 @@ class WebhookController < ApplicationController
               rescue => e
                 text << "カーリルが悪いよー\n"
               end
+=begin
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
@@ -125,6 +127,7 @@ class WebhookController < ApplicationController
               @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
             end
+=end
           end
           # text << @response_json['items'][0]['volumeInfo']['title'].to_s
           @@user_data[userId] = {:user_query => user_query}
