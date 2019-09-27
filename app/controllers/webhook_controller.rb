@@ -113,7 +113,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << @response_json.dig('books').to_s
+              text << "#{@response_json.dig('books')}"
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 3
                 text << "#{book_item[1]}\n"
@@ -121,15 +121,10 @@ class WebhookController < ApplicationController
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
                 end
               end
-            else
-              @@user_data[userId] = {:user_query => user_query}
-              text << "位置情報を入力してね"
             end
+              text << "位置情報を入力してね"
           end
-          # text << @response_json['items'][0]['volumeInfo']['title'].to_s
 
-          text << @@user_data.to_s
-          text << "test"
           message = {
             type: 'text',
             text: text
