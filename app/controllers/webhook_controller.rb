@@ -113,7 +113,7 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              text << @response_json['books'].to_s
+              text << @response_json.dig('books').to_s
               books_data.each_with_index do |book_item, book_index|
                 break if book_index == 3
                 text << "#{book_item[1]}\n"
@@ -157,7 +157,6 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
-          text << @@user_data.to_s
           message = {
             type: 'text',
             text: text
