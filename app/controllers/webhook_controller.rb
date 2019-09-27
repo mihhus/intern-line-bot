@@ -132,8 +132,6 @@ class WebhookController < ApplicationController
 
           text << @@user_data.to_s
           text << "test"
-          text << books_data.length.to_s
-          text << library_data.lenght.to_s
           message = {
             type: 'text',
             text: text
