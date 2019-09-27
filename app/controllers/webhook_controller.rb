@@ -57,6 +57,7 @@ class WebhookController < ApplicationController
                   type = industry.dig('type')
                   if type == "ISBN_10" || type == "ISBN_13" then
                     books_data.push([industry.dig('identifier'), item['volumeInfo']['title'], item['volumeInfo']['author']])
+                    text << books_data[0]
                     data_acquisition += 1
                     break if data_acquisition == 10
                   end
@@ -116,12 +117,14 @@ class WebhookController < ApplicationController
                 end
               end
               text << "syuturyokunotoko\n"
+=begin
               books_data.each_with_index do |book_item, book_index|
                 # text << "title: #{books_data[book_index][1]}\n"
                 # library_data.each_with_index do |library_item, library_index|
                   # text << "  author\n"
                   # text << "  #{library_data[library_index][1]}: #{@response_json['books'][books_data[book_index][0]]['libkey'].to_a}\n"
               end
+=end
             else
               @@user_data[userId] = {:user_query => user_query}
               text << "位置情報を入力してね"
