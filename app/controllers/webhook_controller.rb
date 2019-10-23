@@ -40,16 +40,17 @@ class WebhookController < ApplicationController
           loop do
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
             begin
+              # モジュール化
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
                 http.get(uri.request_uri)
               end
               @response_json = JSON.parse(response.body)
-            rescue => e
-              text << "Googlegaが悪いよー"
+            rescue
+              text << "Googleが悪いよ~ ";
             end
-            
-            break unless @response_json.has_key?('items')
+            break unless @response_json.has_key?('items')  # リクエストの返事に書誌データがなければ検索を打ち切る
             @response_json['items'].each do |item|
+              # モジュール化
               # ISBNが存在しなければスキップ
               if industry = item.dig('volumeInfo', 'industryIdentifiers') then
                 if industry.kind_of?(Hash) then
@@ -71,7 +72,6 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
-          # 書籍のデータが何件あるかで条件を分岐したい(仮)
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
@@ -80,11 +80,12 @@ class WebhookController < ApplicationController
               longitude = @@user_data[userId][:location][:longitude]
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
               begin
+                # モジュール化
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
                 end
                 @response_json = JSON.parse(response.body)
-              rescue => e
+              rescue
                 text << "カーリルが悪いよー\n"
               end
               @response_json.each_with_index do |value, index|
@@ -107,13 +108,13 @@ class WebhookController < ApplicationController
                   response = Net::HTTP.start(uri.host, uri.port) do |http|
                     http.get(uri.request_uri)
                   end
-                  @response_json = JSON.parse(response.body[/\[.*\]/])
-                rescue => e
+                  @response_json = JSON.parse(response.body[/\[.*\]/])  # 全体の外に余分なカッコがついているので除去する
+                rescue
                   text << "カーリルが悪いよー\n"
                 end
               end
               books_data.each_with_index do |book_item, book_index|
-                break if book_index == 2
+                break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 text << "#{book_item[1]}\n"
                 library_data.each_with_index do |library_item, library_index|
                   text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
