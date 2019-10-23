@@ -5,7 +5,7 @@ require 'json'
 
 class WebhookController < ApplicationController
   protect_from_forgery except: [:callback] # CSRF対策無効化
-  @@user_data = {"test" => "tester"}
+  @@user_data = {} # 現時点では大規模なサービスとして提供するわけでは無いので簡潔に書くためにインメモリで保存する. きちんと実装する時はDB作ってO/Rマッパを書くこと
 
   def client
     @client ||= Line::Bot::Client.new { |config|
@@ -16,12 +16,10 @@ class WebhookController < ApplicationController
 
   def callback
     body = request.body.read
-
     signature = request.env['HTTP_X_LINE_SIGNATURE']
     unless client.validate_signature(body, signature)
       head 470
     end
-
 
     events = client.parse_events_from(body)
     events.each { |event|
@@ -54,6 +52,7 @@ class WebhookController < ApplicationController
               # ISBNが存在しなければスキップ
               if industry = item.dig('volumeInfo', 'industryIdentifiers') then
                 if industry.kind_of?(Hash) then
+                  # industryが単一の場合Hashで返され, 複数の場合Arrayで返されるので違いを検出する必要がある
                   type = industry.dig('type')
                   if type == "ISBN_10" || type == "ISBN_13" then
                     books_data.push([industry.dig('identifier'), item['volumeInfo']['title']])
@@ -164,7 +163,7 @@ class WebhookController < ApplicationController
     head :ok
   end
 private
-CALILAPI_ENDPOINT = "http://api.calil.jp"
-GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
+    CALILAPI_ENDPOINT = "http://api.calil.jp"
+    GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
 
