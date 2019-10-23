@@ -50,21 +50,20 @@ class WebhookController < ApplicationController
             @response_json['items'].each do |item|
               # モジュール化
               # ISBNが存在しなければスキップ
-              if industry = item.dig('volumeInfo', 'industryIdentifiers') then
-                if industry.kind_of?(Hash) then
-                  # industryが単一の場合Hashで返され, 複数の場合Arrayで返されるので違いを検出する必要がある
-                  type = industry.dig('type')
-                  if type == "ISBN_10" || type == "ISBN_13" then
-                    books_data.push([industry.dig('identifier'), item['volumeInfo']['title']])
-                    data_acquisition += 1
-                  end
-                elsif industry.kind_of?(Array) then
-                  type = industry[0].dig('type')
-                  if type == "ISBN_10" || type == "ISBN_13" then
-                    books_data.push([industry[0].dig('identifier'), item['volumeInfo']['title']])
-                    data_acquisition += 1
-                  end
-                end
+              industrys = item.dig('volumeInfo', 'industryIdentifires')
+              if industrys.kind_of?(Hash) then
+                  industry = industrys
+              end
+              if industrys.kind_of?(Array) then
+                  industry = industrys[0]
+              end
+              industry = industrys if industrys.kind_of?(Hash)
+              industry = industrys[0] if industrys.kind_of?(Array)
+
+              type = industry.dig('type')
+              if type == "ISBN_10" || type == "ISBN_13" then
+                  books_data.push(industry.dig('identifier'), item['volumeInfo']['title'])
+                  data_acquisition += 1
               end
             end
             break if data_acquisition > 10
