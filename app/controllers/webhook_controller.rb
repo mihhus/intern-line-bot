@@ -166,3 +166,18 @@ private
     GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
 
+def getAPIs()
+
+end
+
+def getISBNs()
+
+end
+
+def getNearbyLibs()
+
+end
+
+def polling()
+
+end
