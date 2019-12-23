@@ -67,7 +67,6 @@ class WebhookController < ApplicationController
                   books_data.push(industry.dig('identifier'), item['volumeInfo']['title'])
                   data_acquisition += 1
               end
-            end
           message = {
             type: 'text',
             text: industry['identifier']
