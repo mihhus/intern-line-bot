@@ -94,6 +94,11 @@ class WebhookController < ApplicationController
                 text << "カーリルが悪いよー\n"
               end
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
+              message = {
+                type: 'text',
+                text: text
+              }
+              client.reply_message(event['replyToken'], message)
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
                 uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")
@@ -117,11 +122,6 @@ class WebhookController < ApplicationController
               end
             end
           end
-              message = {
-                type: 'text',
-                text: text
-              }
-              client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
