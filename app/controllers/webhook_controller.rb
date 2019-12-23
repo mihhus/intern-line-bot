@@ -53,14 +53,6 @@ class WebhookController < ApplicationController
               # ISBNが存在しなければスキップ
               industrys = item.dig('volumeInfo', 'industryIdentifiers')
               next if industrys == nil
-=begin
-              if industrys.kind_of?(Hash) then
-                  industry = industrys
-              end
-              if industrys.kind_of?(Array) then
-                  industry = industrys[0]
-              end
-=end
               industry = industrys if industrys.kind_of?(Hash)
               industry = industrys[0] if industrys.kind_of?(Array)
               type = industry.dig('type')
@@ -72,11 +64,6 @@ class WebhookController < ApplicationController
             break if data_acquisition > 9
             startIndex += 1
           end
-              message = {
-                type: 'text',
-                text: data_acquisition
-              }
-              client.reply_message(event['replyToken'], message)
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
@@ -130,6 +117,11 @@ class WebhookController < ApplicationController
               end
             end
           end
+              message = {
+                type: 'text',
+                text: data_acquisition
+              }
+              client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
