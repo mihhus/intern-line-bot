@@ -48,11 +48,6 @@ class WebhookController < ApplicationController
               text << "Googleが悪いよ~ ";
             end
             break unless @response_json.has_key?('items')  # リクエストの返事に書誌データがなければ検索を打ち切る
-          message = {
-            type: 'text',
-            text: startIndex
-          }
-          client.reply_message(event['replyToken'], message)
             @response_json['items'].each do |item|
               # モジュール化
               # ISBNが存在しなければスキップ
@@ -74,6 +69,11 @@ class WebhookController < ApplicationController
             end
             break if data_acquisition > 10
             startIndex += 1
+          message = {
+            type: 'text',
+            text: startIndex
+          }
+          client.reply_message(event['replyToken'], message)
           end
 
           if @@user_data.has_key?(userId) then
