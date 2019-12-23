@@ -60,6 +60,11 @@ class WebhookController < ApplicationController
                   industry = industrys[0]
               end
 =end
+          message = {
+            type: 'text',
+            text: item['volumeInfo']['industryIdentifiers'][0]['type']
+          }
+          client.reply_message(event['replyToken'], message)
               industry = industrys if industrys.kind_of?(Hash)
               industry = industrys[0] if industrys.kind_of?(Array)
               type = industry.dig('type')
@@ -68,11 +73,6 @@ class WebhookController < ApplicationController
                   data_acquisition += 1
               end
             end
-          message = {
-            type: 'text',
-            text: item['volumeInfo']['industryIdentifiers'][0]['type']
-          }
-          client.reply_message(event['replyToken'], message)
 
             break if data_acquisition > 10
             startIndex += 1
