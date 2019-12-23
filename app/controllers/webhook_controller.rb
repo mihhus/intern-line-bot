@@ -82,7 +82,7 @@ class WebhookController < ApplicationController
                 text << "カーリルが悪いよー\n"
               end
               @response_json.each_with_index do |value, index|
-                library_data.push(value["systemid"],value["short"])
+                library_data.push([value["systemid"],value["short"]])
               end
               message = {
                 type: 'text',
