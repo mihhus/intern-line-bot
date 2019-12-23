@@ -65,6 +65,11 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
+              message = {
+                type: 'text',
+                text: "text"
+              }
+              client.reply_message(event['replyToken'], message)
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
@@ -72,11 +77,6 @@ class WebhookController < ApplicationController
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
-              message = {
-                type: 'text',
-                text: "text"
-              }
-              client.reply_message(event['replyToken'], message)
               begin
                 # モジュール化
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
