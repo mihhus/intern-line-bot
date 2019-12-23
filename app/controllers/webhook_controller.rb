@@ -36,12 +36,8 @@ class WebhookController < ApplicationController
           startIndex = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           loop do
-            message = {
-              type: 'text',
-              text: "tekishuto"
-            }
-            client.reply_message(event['replyToken'], message)
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
+            @response_json = 0
             begin
               # モジュール化
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -74,6 +70,11 @@ class WebhookController < ApplicationController
             break if data_acquisition > 10
             startIndex += 1
           end
+          message = {
+            type: 'text',
+            text: "tekishuto"
+          }
+          client.reply_message(event['replyToken'], message)
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
