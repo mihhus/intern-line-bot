@@ -133,7 +133,7 @@ class WebhookController < ApplicationController
           tf.write(response.body)
         when Line::Bot::Event::MessageType::Location
           calil_appkey = ENV["CALIL_APPKEY"]
-            # locationの取得方法&格納をモジュール化
+          # locationの取得方法&格納をモジュール化
           latitude = event.message['latitude']
           longitude = event.message['longitude']
           @@user_data[userId] = {:location => {:latitude => latitude, :longitude => longitude}}
@@ -166,18 +166,68 @@ private
     GOOGLEAPI_ENDPOINT = "https://www.googleapis.com"
 end
 
-def getAPIs()
-
+def getAPIs(uri, usr_ssl = nil)
+    begin
+       if(use_ssl == "https") then
+          response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+            http.get(uri.request_uri)
+          end
+       else
+         response = Net::HTTP.start(uri.host, uri.port) do |http|
+           http.get(uri.request_uri)
+         end
+       end
+       return JSON.parse(response.body)
+    rescue => e
+      return e
+    end
 end
 
-def getISBNs()
+def getISBNs(uri)
+  books = []
+  data_acquisition = 0
+  startIndex += 1
+  loop do
+    begin
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        http.get(uri.request_uri)
+      end
+      @response_json = JSON.parse(response.body)
+    rescue
+      text << "Googleが悪いよ~ ";
+    end
+    break unless @response_json.has_key?('items')  # リクエストの返事に書誌データがなければ検索を打ち切る
+    @response_json['items'].each do |item|
+      # ISBNが存在しなければスキップ
+      industrys = item.dig('volumeInfo', 'industryIdentifires')
+      if industrys.kind_of?(Hash) then
+          industry = industrys
+      end
+      if industrys.kind_of?(Array) then
+          industry = industrys[0]
+      end
+      industry = industrys if industrys.kind_of?(Hash)
+      industry = industrys[0] if industrys.kind_of?(Array)
 
+      type = industry.dig('type')
+      if type == "ISBN_10" || type == "ISBN_13" then
+          books_data.push(industry.dig('identifier'), item['volumeInfo']['title'])
+          data_acquisition += 1
+      end
+    end
+    break if data_acquisition > 10
+    startIndex += 1
+  end
+
+  return books
 end
 
-def getNearbyLibs()
+def getNearbyLibs(uri)
 
+    return librarys
 end
 
-def polling()
+def polling(uri, session_num)
 
+    return response_json
 end
