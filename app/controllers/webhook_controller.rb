@@ -74,6 +74,7 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
+            end
             break if data_acquisition > 10
             startIndex += 1
           end
@@ -130,7 +131,6 @@ class WebhookController < ApplicationController
               end
             end
           end
-        end
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
