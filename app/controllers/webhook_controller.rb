@@ -67,11 +67,13 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
+              if data_acquisition != 0 then
               message = {
                 type: 'text',
                 text: uri
               }
               client.reply_message(event['replyToken'], message)
+              end
             end
             break if data_acquisition > 10
             startIndex += 1
