@@ -74,6 +74,11 @@ class WebhookController < ApplicationController
             text: uri
           }
           client.reply_message(event['replyToken'], message)
+          message = {
+            type: 'text',
+            text: uri
+          }
+          client.reply_message(event['replyToken'], message)
           end
 
           if @@user_data.has_key?(userId) then
