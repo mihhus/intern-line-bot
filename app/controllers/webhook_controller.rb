@@ -71,7 +71,7 @@ class WebhookController < ApplicationController
             startIndex += 1
           message = {
             type: 'text',
-            text: industry['identifier']
+            text: item['volumeInfo']['title']
           }
           client.reply_message(event['replyToken'], message)
           message = {
