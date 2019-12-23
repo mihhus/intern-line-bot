@@ -39,11 +39,6 @@ class WebhookController < ApplicationController
             @response_json = 0
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
             begin
-          message = {
-            type: 'text',
-            text: startIndex
-          }
-          client.reply_message(event['replyToken'], message)
               # モジュール化
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
                 http.get(uri.request_uri)
@@ -52,6 +47,11 @@ class WebhookController < ApplicationController
             rescue
               text << "Googleが悪いよ~ ";
             end
+          message = {
+            type: 'text',
+            text: startIndex
+          }
+          client.reply_message(event['replyToken'], message)
             break unless @response_json.has_key?('items')  # リクエストの返事に書誌データがなければ検索を打ち切る
             @response_json['items'].each do |item|
               # モジュール化
