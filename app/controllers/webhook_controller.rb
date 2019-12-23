@@ -62,7 +62,7 @@ class WebhookController < ApplicationController
 =end
           message = {
             type: 'text',
-            text: item['volumeInfo']['industryIdentifiers'][0]['type']
+            text: industrys[0]['type']
           }
           client.reply_message(event['replyToken'], message)
               industry = industrys if industrys.kind_of?(Hash)
