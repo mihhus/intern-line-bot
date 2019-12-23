@@ -38,7 +38,7 @@ class WebhookController < ApplicationController
           loop do
             @response_json = 0
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
-            if startIndex != 1 then
+            if startIndex != 0 then
           message = {
             type: 'text',
             text: uri
