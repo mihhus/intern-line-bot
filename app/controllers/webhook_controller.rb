@@ -72,7 +72,7 @@ class WebhookController < ApplicationController
           end
           message = {
             type: 'text',
-            text: books_data[0][0]
+            text: books_data.length
           }
           client.reply_message(event['replyToken'], message)
 
