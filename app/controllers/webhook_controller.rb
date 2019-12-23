@@ -67,13 +67,13 @@ class WebhookController < ApplicationController
                   data_acquisition += 1
               end
             end
-            break if data_acquisition > 10
-            startIndex += 1
           message = {
             type: 'text',
             text: startIndex
           }
           client.reply_message(event['replyToken'], message)
+            break if data_acquisition > 10
+            startIndex += 1
           end
 
           if @@user_data.has_key?(userId) then
