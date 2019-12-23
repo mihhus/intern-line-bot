@@ -34,9 +34,9 @@ class WebhookController < ApplicationController
           library_data = []
           data_acquisition = 0
           startIndex = 0
+          @response_json = 0
           # 書誌情報にISBNを持つ本の情報を10冊集めたらbreakする
           loop do
-            @response_json = 0
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
             begin
               # モジュール化
