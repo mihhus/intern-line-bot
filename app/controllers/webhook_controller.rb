@@ -51,7 +51,7 @@ class WebhookController < ApplicationController
             @response_json['items'].each do |item|
           message = {
             type: 'text',
-            text: startIndex
+            text: item
           }
           client.reply_message(event['replyToken'], message)
               # モジュール化
