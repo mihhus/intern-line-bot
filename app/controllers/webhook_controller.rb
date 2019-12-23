@@ -74,7 +74,7 @@ class WebhookController < ApplicationController
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
               message = {
                 type: 'text',
-                text: uri
+                text: "text"
               }
               begin
                 # モジュール化
