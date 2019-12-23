@@ -67,15 +67,15 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
+            break if data_acquisition > 10
+            startIndex += 1
+          end
           message = {
             type: 'text',
             text: industry['identifier']
           }
           client.reply_message(event['replyToken'], message)
 
-            break if data_acquisition > 10
-            startIndex += 1
-          end
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
