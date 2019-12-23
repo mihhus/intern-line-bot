@@ -95,7 +95,7 @@ class WebhookController < ApplicationController
               end
               message = {
                 type: 'text',
-                text: @response_json["continue"]
+                text: uri
               }
               client.reply_message(event['replyToken'], message)
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
