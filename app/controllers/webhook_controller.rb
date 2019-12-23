@@ -72,11 +72,6 @@ class WebhookController < ApplicationController
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
-              message = {
-                type: 'text',
-                text: "text"
-              }
-              client.reply_message(event['replyToken'], message)
               begin
                 # モジュール化
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
@@ -98,6 +93,11 @@ class WebhookController < ApplicationController
               rescue
                 text << "カーリルが悪いよー\n"
               end
+              message = {
+                type: 'text',
+                text: "text"
+              }
+              client.reply_message(event['replyToken'], message)
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
