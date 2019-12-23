@@ -70,7 +70,7 @@ class WebhookController < ApplicationController
             end
               message = {
                 type: 'text',
-                text: data_acquisition
+                text: uri
               }
               client.reply_message(event['replyToken'], message)
             break if data_acquisition > 10
