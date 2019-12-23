@@ -68,6 +68,7 @@ class WebhookController < ApplicationController
           }
           client.reply_message(event['replyToken'], message) if industrys.kind_of?(Hash)
           client.reply_message(event['replyToken'], message) if industrys.kind_of?(Array)
+          client.reply_message(event['replyToken'], message)
 
               type = industry.dig('type')
               if type == "ISBN_10" || type == "ISBN_13" then
