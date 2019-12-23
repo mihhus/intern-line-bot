@@ -93,11 +93,6 @@ class WebhookController < ApplicationController
               rescue
                 text << "カーリルが悪いよー\n"
               end
-              message = {
-                type: 'text',
-                text: "text"
-              }
-              client.reply_message(event['replyToken'], message)
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
@@ -111,6 +106,11 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
+              message = {
+                type: 'text',
+                text: "text"
+              }
+              client.reply_message(event['replyToken'], message)
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
