@@ -85,12 +85,12 @@ class WebhookController < ApplicationController
                 library_data.push([value["systemid"],value["short"]])
               end
               # uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
-              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}")
               message = {
                 type: 'text',
                 text: test
               }
               client.reply_message(event['replyToken'], message)
+              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}")
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
