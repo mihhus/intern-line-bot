@@ -70,12 +70,12 @@ class WebhookController < ApplicationController
             end
             break if data_acquisition > 10
             startIndex += 1
-          end
               message = {
                 type: 'text',
-                text: uri
+                text: data_acquisition
               }
               client.reply_message(event['replyToken'], message)
+          end
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
