@@ -28,12 +28,6 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
-          message = {
-            type: 'text',
-            text: "text"
-          }
-          client.reply_message(event['replyToken'], message)
-
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           books_data = []
@@ -128,13 +122,11 @@ class WebhookController < ApplicationController
               end
             end
           end
-=begin
           message = {
             type: 'text',
-            text: text
+            text: "tekisuto"
           }
           client.reply_message(event['replyToken'], message)
-=end
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
