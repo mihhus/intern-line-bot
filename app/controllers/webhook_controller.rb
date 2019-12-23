@@ -39,12 +39,12 @@ class WebhookController < ApplicationController
             @response_json = 0
             uri = URI.parse(GOOGLEAPI_ENDPOINT + "/books/v1/volumes?q=" + user_query + "&maxResults=10&startIndex=" + startIndex.to_s)
             if startIndex != 0 then
-          message = {
-            type: 'text',
-            text: uri
-          }
-          client.reply_message(event['replyToken'], message)
-          end
+              message = {
+                type: 'text',
+                text: uri
+              }
+              client.reply_message(event['replyToken'], message)
+            end
             begin
               # モジュール化
               response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -74,7 +74,7 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
-            break if data_acquisition > 10
+            # break if data_acquisition > 10
             startIndex += 1
           end
 
