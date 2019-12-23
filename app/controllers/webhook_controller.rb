@@ -66,14 +66,14 @@ class WebhookController < ApplicationController
               if type == "ISBN_10" || type == "ISBN_13" then
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
+          message = {
+            type: 'text',
+            text: books_data
+          }
+          client.reply_message(event['replyToken'], message)
               end
             break if data_acquisition > 10
             startIndex += 1
-          message = {
-            type: 'text',
-            text: item['volumeInfo']['title']
-          }
-          client.reply_message(event['replyToken'], message)
           end
 
           if @@user_data.has_key?(userId) then
