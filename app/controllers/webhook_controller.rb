@@ -74,7 +74,7 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
-            # break if data_acquisition > 10
+            break if data_acquisition > 10
             startIndex += 1
           end
 
