@@ -98,7 +98,7 @@ class WebhookController < ApplicationController
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
-                uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&session#{response["session"]}&format=json")
+                uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&session#{@response_json["session"]}&format=json")
                 begin
                   response = Net::HTTP.start(uri.host, uri.port) do |http|
                     http.get(uri.request_uri)
