@@ -111,7 +111,7 @@ class WebhookController < ApplicationController
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
-                text << "#{book_item[0]}\n"
+                text << "#{book_item[1][1]}\n"
               message = {
                 type: 'text',
                 text: text
