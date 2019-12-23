@@ -76,7 +76,6 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
-=begin
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
@@ -129,6 +128,7 @@ class WebhookController < ApplicationController
               end
             end
           end
+=begin
           message = {
             type: 'text',
             text: text
