@@ -72,12 +72,12 @@ class WebhookController < ApplicationController
               latitude = @@user_data[userId][:location][:latitude]
               longitude = @@user_data[userId][:location][:longitude]
               uri = URI.parse(CALILAPI_ENDPOINT + "/library?appkey=#{calil_appkey}&geocode=#{longitude},#{latitude}&limit=10&format=json&callback= ")
-              begin
-                # モジュール化
               message = {
                 type: 'text',
                 text: uri
               }
+              begin
+                # モジュール化
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
                 end
