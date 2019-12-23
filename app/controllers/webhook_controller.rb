@@ -146,6 +146,7 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
+          text << @@user_data[userId][:location][:latitude]
           message = {
             type: 'text',
             text: text
