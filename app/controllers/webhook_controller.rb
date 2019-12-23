@@ -28,6 +28,12 @@ class WebhookController < ApplicationController
       when Line::Bot::Event::Message
         case event.type
         when Line::Bot::Event::MessageType::Text
+          message = {
+            type: 'text',
+            text: text
+          }
+          client.reply_message(event['replyToken'], message)
+
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
           books_data = []
