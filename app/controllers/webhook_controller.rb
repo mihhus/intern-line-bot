@@ -66,6 +66,11 @@ class WebhookController < ApplicationController
           end
 
           if @@user_data.has_key?(userId) then
+              message = {
+                type: 'text',
+                text: "test"
+              }
+              client.reply_message(event['replyToken'], message)
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
               # Locationがすでに設定されている
@@ -110,20 +115,13 @@ class WebhookController < ApplicationController
                 # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 text << "#{book_item[1]}\n"
-=begin
                 library_data.each_with_index do |library_item, library_index|
                   text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
                 # library_item[1]内部に欲しいデータが格納されているが、JSONとして(各図書館ごとにバラバラに)返却されるので手直しが必要
                 end
-=end
               end
             end
           end
-              message = {
-                type: 'text',
-                text: "test"
-              }
-              client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
