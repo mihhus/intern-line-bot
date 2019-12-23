@@ -87,7 +87,7 @@ class WebhookController < ApplicationController
               # uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
               message = {
                 type: 'text',
-                text: test
+                text: uri
               }
               client.reply_message(event['replyToken'], message)
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}")
