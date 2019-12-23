@@ -66,11 +66,6 @@ class WebhookController < ApplicationController
           end
 
           if @@user_data.has_key?(userId) then
-              message = {
-                type: 'text',
-                text: "test"
-              }
-              client.reply_message(event['replyToken'], message)
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
               # Locationがすでに設定されている
@@ -122,6 +117,11 @@ class WebhookController < ApplicationController
               end
             end
           end
+              message = {
+                type: 'text',
+                text: text
+              }
+              client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
