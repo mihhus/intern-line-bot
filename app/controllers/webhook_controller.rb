@@ -65,11 +65,6 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
-              message = {
-                type: 'text',
-                text: @@user_data[userId][:location][:latitude]
-              }
-              client.reply_message(event['replyToken'], message)
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
@@ -86,6 +81,11 @@ class WebhookController < ApplicationController
               rescue
                 text << "カーリルが悪いよー\n"
               end
+              message = {
+                type: 'text',
+                text: uri
+              }
+              client.reply_message(event['replyToken'], message)
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
@@ -146,7 +146,6 @@ class WebhookController < ApplicationController
           for value in response_json do
             text << "#{value["short"]}\n"
           end
-          text << @@user_data[userId][:location][:latitude]
           message = {
             type: 'text',
             text: text
