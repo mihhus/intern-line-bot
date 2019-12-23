@@ -33,7 +33,6 @@ class WebhookController < ApplicationController
             text: "text"
           }
           client.reply_message(event['replyToken'], message)
-=begin
 
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
@@ -77,6 +76,7 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
+=begin
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
