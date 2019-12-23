@@ -52,6 +52,7 @@ class WebhookController < ApplicationController
               # モジュール化
               # ISBNが存在しなければスキップ
               industrys = item.dig('volumeInfo', 'industryIdentifiers')
+              next if industrys == nil
 =begin
               if industrys.kind_of?(Hash) then
                   industry = industrys
