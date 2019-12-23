@@ -64,7 +64,7 @@ class WebhookController < ApplicationController
               industry = industrys[0] if industrys.kind_of?(Array)
           message = {
             type: 'text',
-            text: startIndex
+            text: industrys
           }
           client.reply_message(event['replyToken'], message)
 
