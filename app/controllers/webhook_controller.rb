@@ -64,10 +64,8 @@ class WebhookController < ApplicationController
               industry = industrys[0] if industrys.kind_of?(Array)
           message = {
             type: 'text',
-            text: item['volumeInfo']['industryIdentifiers']['type']
+            text: industry
           }
-          client.reply_message(event['replyToken'], message) if industrys.kind_of?(Hash)
-          client.reply_message(event['replyToken'], message) if industrys.kind_of?(Array)
           client.reply_message(event['replyToken'], message)
 
               type = industry.dig('type')
