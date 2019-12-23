@@ -33,6 +33,7 @@ class WebhookController < ApplicationController
             text: text
           }
           client.reply_message(event['replyToken'], message)
+=begin
 
           text = ""
           user_query = URI.escape(event.message['text'], /[^-_.!~*'()a-zA-Z\d]/u)
@@ -133,6 +134,7 @@ class WebhookController < ApplicationController
             text: text
           }
           client.reply_message(event['replyToken'], message)
+=end
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
