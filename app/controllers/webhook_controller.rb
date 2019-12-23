@@ -49,15 +49,22 @@ class WebhookController < ApplicationController
             end
             break unless @response_json.has_key?('items')  # リクエストの返事に書誌データがなければ検索を打ち切る
             @response_json['items'].each do |item|
+          message = {
+            type: 'text',
+            text: startIndex
+          }
+          client.reply_message(event['replyToken'], message)
               # モジュール化
               # ISBNが存在しなければスキップ
               industrys = item.dig('volumeInfo', 'industryIdentifires')
+=begin
               if industrys.kind_of?(Hash) then
                   industry = industrys
               end
               if industrys.kind_of?(Array) then
                   industry = industrys[0]
               end
+=end
               industry = industrys if industrys.kind_of?(Hash)
               industry = industrys[0] if industrys.kind_of?(Array)
 
@@ -67,11 +74,6 @@ class WebhookController < ApplicationController
                   data_acquisition += 1
               end
             end
-          message = {
-            type: 'text',
-            text: startIndex
-          }
-          client.reply_message(event['replyToken'], message)
             break if data_acquisition > 10
             startIndex += 1
           end
