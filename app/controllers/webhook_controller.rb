@@ -67,7 +67,7 @@ class WebhookController < ApplicationController
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
               end
-              if data_acquisition != 0 then
+              if data_acquisition > 2 then
               message = {
                 type: 'text',
                 text: uri
