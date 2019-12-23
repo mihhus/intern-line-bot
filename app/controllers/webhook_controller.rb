@@ -60,14 +60,14 @@ class WebhookController < ApplicationController
                   industry = industrys[0]
               end
 =end
+              industry = industrys if industrys.kind_of?(Hash)
+              industry = industrys[0] if industrys.kind_of?(Array)
+              type = industry.dig('type')
               message = {
                 type: 'text',
                 text: uri
               }
               client.reply_message(event['replyToken'], message)
-              industry = industrys if industrys.kind_of?(Hash)
-              industry = industrys[0] if industrys.kind_of?(Array)
-              type = industry.dig('type')
               if type == "ISBN_10" || type == "ISBN_13" then
                   books_data.push(industry['identifier'], item['volumeInfo']['title'])
                   data_acquisition += 1
