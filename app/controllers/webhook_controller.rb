@@ -69,6 +69,11 @@ class WebhookController < ApplicationController
             break if data_acquisition > 10
             startIndex += 1
           end
+          message = {
+            type: 'text',
+            text: "tekishuto"
+          }
+          client.reply_message(event['replyToken'], message)
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
@@ -122,11 +127,6 @@ class WebhookController < ApplicationController
               end
             end
           end
-          message = {
-            type: 'text',
-            text: "tekisuto"
-          }
-          client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
