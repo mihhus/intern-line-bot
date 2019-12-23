@@ -114,7 +114,7 @@ class WebhookController < ApplicationController
                 text << "#{book_item[0][1]}\n"
               message = {
                 type: 'text',
-                text: uri
+                text: text
               }
               client.reply_message(event['replyToken'], message)
                 library_data.each_with_index do |library_item, library_index|
