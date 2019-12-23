@@ -85,7 +85,7 @@ class WebhookController < ApplicationController
                 library_data.push([value["systemid"],value["short"]])
               end
               # uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
-              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
+              uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=  ")
               message = {
                 type: 'text',
                 text: uri
