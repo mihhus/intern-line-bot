@@ -65,13 +65,13 @@ class WebhookController < ApplicationController
             startIndex += 1
           end
 
+          if @@user_data.has_key?(userId) then
+            if @@user_data[userId].has_key?(:location) then
               message = {
                 type: 'text',
                 text: "text"
               }
               client.reply_message(event['replyToken'], message)
-          if @@user_data.has_key?(userId) then
-            if @@user_data[userId].has_key?(:location) then
               calil_appkey = ENV["CALIL_APPKEY"]
               # Locationがすでに設定されている
               latitude = @@user_data[userId][:location][:latitude]
