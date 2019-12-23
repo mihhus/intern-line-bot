@@ -75,7 +75,7 @@ class WebhookController < ApplicationController
             break if data_acquisition > 10
           message = {
             type: 'text',
-            text: data_acquisition
+            text: books_data[0]
           }
           client.reply_message(event['replyToken'], message)
             startIndex += 1
