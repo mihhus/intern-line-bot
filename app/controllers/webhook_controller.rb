@@ -108,11 +108,6 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              message = {
-                type: 'text',
-                text: uri
-              }
-              client.reply_message(event['replyToken'], message)
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
@@ -124,6 +119,11 @@ class WebhookController < ApplicationController
               end
             end
           end
+              message = {
+                type: 'text',
+                text: uri
+              }
+              client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
           response = client.get_message_content(event.message['id'])
           tf = Tempfile.open("content")
