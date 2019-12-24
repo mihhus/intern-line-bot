@@ -114,11 +114,13 @@ class WebhookController < ApplicationController
                 library_data.each_with_index do |library_item, library_index|
                   if @response_json.dig('books', book_time[0], library_item[0], 'libkey') == nil then
                   text << "  #{library_item[1]}: 蔵書なし\n"
+=begin
                   else
                       @response_json['books'][book_time[0]][library_item[0]]['libkey'].each_pair do |key, val|
                         text << "  #{library_item[1]}: {#{key}:#{val}}\n"
 
                       end
+=end
                   end
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0], 'status')}\n"
                   # case @response_json.dig('books', book_item[0], library_item[0], 'status')
