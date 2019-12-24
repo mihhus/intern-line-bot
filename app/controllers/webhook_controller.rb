@@ -112,7 +112,7 @@ class WebhookController < ApplicationController
                 break if book_index == 1  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 text << "#{book_item[1]}\n"
                 library_data.each_with_index do |library_item, library_index|
-                  if @response_json.dig('books', book_item[0], library_item[0], 'libkey')[0] == nil then
+                  if @response_json.dig('books', book_item[0], library_item[0], 'libkey').empty? then
                     text << "  #{library_item[1]}: 蔵書なし\n"
                   else
                     text << "  #{library_item[1]}: 蔵書あり\n"
