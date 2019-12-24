@@ -109,6 +109,7 @@ class WebhookController < ApplicationController
               end
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
+                text << "#{book_item[1]}\n"
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 library_data.each_with_index do |library_item, library_index|
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
@@ -119,7 +120,7 @@ class WebhookController < ApplicationController
           end
               message = {
                 type: 'text',
-                text: books_data[0][1]
+                text: text
               }
               client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
