@@ -112,8 +112,7 @@ class WebhookController < ApplicationController
                 text << "#{book_item[1]}\n"
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 library_data.each_with_index do |library_item, library_index|
-                  # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
-                  text << "  #{library_item[1]}\n"
+                  text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
                 # library_item[1]内部に欲しいデータが格納されているが、JSONとして(各図書館ごとにバラバラに)返却されるので手直しが必要
                 end
               end
