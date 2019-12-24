@@ -108,13 +108,13 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              books_data.each_with_index do |book_item, book_index|
-                # モジュール化
               message = {
                 type: 'text',
-                text: book_item[0]
+                text: books_data[0][0]
               }
               client.reply_message(event['replyToken'], message)
+              books_data.each_with_index do |book_item, book_index|
+                # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 library_data.each_with_index do |library_item, library_index|
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
