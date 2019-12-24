@@ -86,11 +86,6 @@ class WebhookController < ApplicationController
               end
               no = "no"
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=#{no}")
-              message = {
-                type: 'text',
-                text: books_data[0][0]
-              }
-              client.reply_message(event['replyToken'], message)
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
@@ -99,6 +94,11 @@ class WebhookController < ApplicationController
               rescue
                 text << "カーリルが悪いよー\n"
               end
+              message = {
+                type: 'text',
+                text: books_data[0][0]
+              }
+              client.reply_message(event['replyToken'], message)
               # 図書館ごとの応答を吸収するためにcalilAPI側にpollingが実装されているその対応を書く
               while @response_json["continue"] == 1 do
                 # pollingが始まるとjsonp形式でのみ返答となるので整形してからデータを扱う, 配列内部にJSONが格納されていることに注意が必要
