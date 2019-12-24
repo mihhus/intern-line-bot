@@ -64,11 +64,6 @@ class WebhookController < ApplicationController
             break if data_acquisition > 9
             startIndex += 1
           end
-              message = {
-                type: 'text',
-                text: books_data[0][0]
-              }
-              client.reply_message(event['replyToken'], message)
 
           if @@user_data.has_key?(userId) then
             if @@user_data[userId].has_key?(:location) then
@@ -115,6 +110,11 @@ class WebhookController < ApplicationController
               end
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
+              message = {
+                type: 'text',
+                text: books_item[0]
+              }
+              client.reply_message(event['replyToken'], message)
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
                 library_data.each_with_index do |library_item, library_index|
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0])}\n"
