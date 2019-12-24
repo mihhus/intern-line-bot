@@ -116,12 +116,10 @@ class WebhookController < ApplicationController
                     text << "  #{library_item[1]}: 蔵書なし\n"
                   else
                     text << "  #{library_item[1]}: 蔵書あり\n"
-=begin
                       @response_json['books'][book_item[0]][library_item[0]]['libkey'].each_pair do |key, val|
                         text << "  #{library_item[1]}: {#{key}:#{val}}\n"
 
                       end
-=end
                   end
                   # text << "  #{library_item[1]}: #{@response_json.dig('books', book_item[0], library_item[0], 'status')}\n"
                   # case @response_json.dig('books', book_item[0], library_item[0], 'status')
@@ -155,7 +153,8 @@ class WebhookController < ApplicationController
           rescue
             text << "カーリルが悪いよ \n"
           end
-          text = ""
+          text = "現在位置が正しく設定されました！\n"
+          text << "最寄りの図書館は以下の10件です\n"
           for value in response_json do
             text << "#{value["short"]}\n"
           end
