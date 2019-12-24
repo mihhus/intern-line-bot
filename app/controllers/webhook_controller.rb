@@ -115,7 +115,6 @@ class WebhookController < ApplicationController
                   if @response_json.dig('books', book_item[0], library_item[0], 'libkey').empty? then
                     text << "  #{library_item[1]}: 蔵書なし\n"
                   else
-                    text << "  #{library_item[1]}: 蔵書あり\n"
                       @response_json['books'][book_item[0]][library_item[0]]['libkey'].each_pair do |key, val|
                         text << "  #{library_item[1]}: {#{key}:#{val}}\n"
 
