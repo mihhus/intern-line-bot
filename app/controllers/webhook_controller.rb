@@ -112,7 +112,7 @@ class WebhookController < ApplicationController
                 # モジュール化
               message = {
                 type: 'text',
-                text: books_item[0]
+                text: book_item[0]
               }
               client.reply_message(event['replyToken'], message)
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
