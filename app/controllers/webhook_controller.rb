@@ -119,7 +119,7 @@ class WebhookController < ApplicationController
           end
               message = {
                 type: 'text',
-                text: books_data[0][0]
+                text: books_data[0][1]
               }
               client.reply_message(event['replyToken'], message)
         when Line::Bot::Event::MessageType::Image, Line::Bot::Event::MessageType::Video
