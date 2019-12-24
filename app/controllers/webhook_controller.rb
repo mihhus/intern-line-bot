@@ -84,9 +84,13 @@ class WebhookController < ApplicationController
               @response_json.each_with_index do |value, index|
                 library_data.push([value["systemid"],value["short"]])
               end
-              # uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=no")
               no = "no"
               uri = URI.parse(CALILAPI_ENDPOINT + "/check?appkey=#{calil_appkey}&isbn=#{books_data.map{|row| row[0]}.join(',')}&systemid=#{library_data.map{|row| row[0]}.join(',')}&format=json&callback=#{no}")
+              message = {
+                type: 'text',
+                text: books_data[0][0]
+              }
+              client.reply_message(event['replyToken'], message)
               begin
                 response = Net::HTTP.start(uri.host, uri.port) do |http|
                   http.get(uri.request_uri)
@@ -108,11 +112,6 @@ class WebhookController < ApplicationController
                   text << "カーリルが悪いよー\n"
                 end
               end
-              message = {
-                type: 'text',
-                text: books_data[0][0]
-              }
-              client.reply_message(event['replyToken'], message)
               books_data.each_with_index do |book_item, book_index|
                 # モジュール化
                 break if book_index == 2  #情報が1テキストに入り切らないので暫定的に書籍情報を2個だけにする
